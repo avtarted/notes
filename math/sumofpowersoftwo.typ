@@ -4,12 +4,16 @@
 
 == Introduction
 My goal is to explore the following relation:
-$ 1 + 2 + 4 + 8 + .... + 2^n = 2^(n+1) - 1 $ <goal>
-I'll start by providing the standard proof by induction.
-Then I'll discuss how I personally reason about it and find it plausible.
-This article will include tree visualizations, 
-focus on the recursive nature of this sum, discuss how I use approximations to simplify my reasoning, 
-and finally, I'll conclude with 2 bonus sections where I walk through another sum of terms recurrence relation and where I discuss both problems from a Computer Science and programming perspective.
+$ 1 + 2 + 4 + 8 + .... + 2^n = 2^(n+1) - 1 | n in NN $ <goal>
+I'll prove this using 4 different approaches.
+Merely proving this equation to be true is not enough for me.
+I want to receive and provide insight as to why it's plausible and makes sense, at least to me.
+This article will 
+focus on the recursive nature of this sum, 
+include tree visualizations, 
+discuss how I use approximations to simplify my reasoning, 
+include a proof using binary, 
+and finally, throughout this article, compare and contrast the various approaches, distilling what I believe are key insights.
 
 == Prerequisites
 Knowledge of proof by induction.
@@ -29,7 +33,7 @@ For the RHS, I'll define the function:
 $ F(n) = 2^(n+1) - 1 $ <fn>
 
 Let $P_n$ be the claim that $S(n) = F(n)$.
-I want to prove $P_n$ is true for all $n = 0, 1, 2, ...$.
+I want to prove $P_n$ is true for all $n = 0, 1, 2, ...$, as this proves @goal.
 To this end, I'll use induction. 
 The first step is to check the base case, $P_0$.
 $S(0)=2^0=1$ and $F(0)=2^(0+1)-1=1$. $S(0) = F(0)$. Done.
