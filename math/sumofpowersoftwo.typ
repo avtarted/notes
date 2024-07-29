@@ -168,7 +168,9 @@ But this way is more direct, from small subproblem, we work towards larger subpr
 1 + 1 = 2 = S(0) + 1
 2 + 2 = 4 = S(1) + 1
 4 + 4 = 8 = S(2) + 1
-We're solving 1+problem K along the route to solving 1+problem K+1
+We're solving 1+problem K-1 along the route to solving 1+problem K
+In fact when solving 1 + problem K, we solve all intermediate 1 + problem K - J
+as those are the various powers of 2 being carried.
 
 Bother bringing up domino effect in decimal (ex 1000 = 999+1) or arbitrary base
 like idea is get 111 in some base, b. Then scale by b-1 so that adding 1 causes the domino cascade?
