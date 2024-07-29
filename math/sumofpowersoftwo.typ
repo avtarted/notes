@@ -38,10 +38,10 @@ Next, if I can show $P_k => P_(k+1)$, I'll be done.
 By induction, I would have proved @goal.
 
 Here is the claim $P_k$:
-$ 2^0 + 2^1 + ... + 2^n = 2^(n+1) - 1 $ <pk>
+$ 2^0 + 2^1 + ... + 2^k = 2^(k+1) - 1 $ <pk>
 
 And here is the claim $P_(k+1)$:
-$ 2^0 + 2^1 + ... + 2^n + 2^(n+1) = 2^(n+2) - 1 $ <pkplus1>
+$ 2^0 + 2^1 + ... + 2^k + 2^(k+1) = 2^(k+2) - 1 $ <pkplus1>
 
 Let me prove that $P_k => P_(k+1)$ in 3 ways:
 + the textbook way
@@ -51,27 +51,56 @@ Let me prove that $P_k => P_(k+1)$ in 3 ways:
 === Approach 1: Textbook Induction
 Assuming @pk is true, I want to show that @pkplus1 is true as well.
 Observe that I can transform the LHS of @pkplus1 by plugging in the RHS of @pk.
-I'll do that:
-$ 2^(n+1) - 1  + 2^(n+1) = 2^(n+2) - 1 $
-Write both sides in terms of 2^n using exponent rules:
-$ 2^n*2- 1  + 2^n*2 = 2^n*4- 1 $
-Factor 2^n in the LHS:
-$ 2^n*4 - 1 = 2^n*4 - 1 $
-And we are done. We have successfully proved that $P_k => P_(k+1)$.
-And since we already verified the base case, our proof of @goal is complete.
+After the substitution:
+$ (2^(k+1) - 1)  + 2^(k+1) = 2^(k+2) - 1 $
+Write both sides in terms of 2^k using exponent rules:
+$ 2^k*2- 1  + 2^k*2 = 2^k*4- 1 $
+Factor 2^k in the LHS:
+$ 2^k*4 - 1 = 2^k*4 - 1 $
+And I am done. I have successfully proved that $P_k => P_(k+1)$.
+And since I already verified the base case, my proof of @goal is complete.
 
 === Approach 2: Induction emphasizing recursive definitions
 So the previous proof felt slightly unsatisfactory.
 What I really want to know, besides simply proving the correctness of @goal is more insight as to _why_ it's true.
-If someone looks at $S(n)$ with fresh eyes, defined in @sn, would they be able to come up with $F(n)$, defined in @fn?
+If someone looks at $S(n)$ with fresh eyes, defined in @sn, would they be able to come up with $F(n)$, defined in @fn, if they have never seen $F(n)$ before?
 Why is $F(n)$ plausible?
 Well, the prior proof, at least to me, did not seem to help me too much answer these questions.
-So the proofs in this subsection and the next attempt to answer my questions
+So the proofs in this subsection and the next attempt to answer my questions.
 
 Ok, so actually I slightly lied. The last proof actually did help me, namely one key step in it.
 And that key step was the substitution of the RHS of @pk into @pkplus1.
 This exploited, and more importantly, displayed, the recursive structure of $S(n)$.
-That is, we noticed that $S(n+1)$ expanded out contained $S(n)$.
+That is, $S(k+1)$ expanded out contains $S(k)$.
+
+I'll explicitly write this out:
+$ S(k+1) = S(k) + 2^(k+1) $ <skrecursive>
+
+Now I'll do the same for $F(n)$ and try to write $F(k+1)$ in terms of $F(k)$.
+$ F(k+1) = 2^(k+2) - 1 $
+$ = 2^(k+1)*2 - 1 $
+$ = (2^(k+1) - 1) + 2^(k+1) $
+And done because note that I've spotted, and wrapped in brackets, $F(k)$. Again, I'll explicitly write this out:
+$ F(k+1) = F(k) + 2^(k+1) $ <fkrecursive>
+
+Note that $S(k+1)$ and $F(k+1)$ as defined at @skrecursive and @fkrecursive share the exact same recursive structure!
+In fact, now the proof of the inductive step, $P_k => P_(k+1)$, writes itself.
+$ S(k+1) eq.quest F(k+1) $
+Use the recursive definitions from @skrecursive and @fkrecursive
+$ S(k) + 2^(k+1) eq.quest F(k) + 2^(k+1) $
+Subtract 2^(k+1) from both sides:
+$ S(k) eq.quest F(k) $ 
+And done, because we assume $P_k$ to be true.
+
+I feel that viewing $S(n)$ and $F(n)$ as recurrent relations, yet again, defined at @skrecursive and @fkrecursive is really helpful.
+$S(n)$ grows exponentially at each step, every time we extend the sum by 1 term, we add double the last term.
+This is evident simply by looking at the expanded definition of $S(n)$ at @sn.
+$F(n)$ also clearly grows exponentially as it contains $2^n$.
+So both these functions grow exponentially the same way at each step. 
+And both share the same base case, $S(0) = F(0) = 1$.
+So these functions grow in lockstep with each other and will always remain equivalent.
+Now I feel I have more insight in terms of considering growth.
+I feel there are definitely parallels to calculus that, while at the moment I'm unequipped to treat, may be worth exploring.
 
 === Approach 3: "Approximate" Visual Induction
 Draw the tree and table. Possibly to do so side-by-side?
@@ -82,5 +111,5 @@ Maybe expanding out a few more levels to convince themselves of the increasingly
 This section, I'd like to introduce a way I reasoned about $F(n)$ being plausible.
 Again, from the previous section, the key idea is the exponential growth of $S(n)$.
 Visually at each level, $2^d$ more nodes are introduced.
-So my candidate function to match or approximate $S(n)$ could grow exponentially. And the base is 2. So why not simply try the function $2^n$?
-Indeed $S(n) tilde.equiv 2^n$. And I'll present a visual "proof" of this. 
+So my candidate function to match or approximate $S(n)$ could grow exponentially. And the base is 2. So why not simply try the function $2^(n+1)$?
+Indeed $S(n) tilde.equiv 2^(n+1)$. And I'll present a visual "proof" of this.
