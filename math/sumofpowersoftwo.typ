@@ -1,3 +1,5 @@
+#set math.equation(numbering: "(1)")
+
 = Sums of Powers Of Two
 
 == Introduction
@@ -33,11 +35,28 @@ The first step is to check the base case, $P_0$.
 $S(0)=2^0=1$ and $F(0)=2^(0+1)-1=1$. $S(0) = F(0)$. Done.
 
 Next, if I can show $P_k => P_(k+1)$, I'll be done.
-Let's prove this the textbook way and then repeat it but with a focus on the recursive natures of $S(n)$ and $F(n)$.
+
+Here is the claim $P_k$:
+$ 2^0 + 2^1 + ... + 2^n = 2^(n+1) - 1 $ <pk>
+
+And here is the claim $P_(k+1)$:
+$ 2^0 + 2^1 + ... + 2^n + 2^(n+1) = 2^(n+2) - 1 $ <pkplus1>
+
+Let me prove this the textbook way and then repeat it but with a focus on the recursive natures of $S(n)$ and $F(n)$.
 
 === Approach 1: Textbook Induction
-So we do this
+Assuming @pk is true, I want to show that @pkplus1 is true as well.
+Observe that I can transform the LHS of @pkplus1 by plugging in the RHS of @pk.
+I'll do that:
+$ 2^(n+1) - 1  + 2^(n+1) = 2^(n+2) - 1 $
+Write both sides in terms of 2^n using exponent rules:
+$ 2^n*2- 1  + 2^n*2 = 2^n*4- 1 $
+Factor 2^n in the LHS:
+$ 2^n*4 - 1 = 2^n*4 - 1 $
+And we are done. We have successfully proved that $P_k => P_(k+1)$.
 
 === Approach 2: Induction emphasizing recursive definitions
-So we do this
-
+So the previous proof felt slightly unsatisfactory.
+The key step was the substitution of the RHS of @pk into @pkplus1.
+This exploited the recursive structure of $S(n)$.
+That is, we noticed that $S(n+1)$ expanded out contained $S(n)$.
