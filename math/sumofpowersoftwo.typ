@@ -86,7 +86,7 @@ $ F(k+1) = F(k) + 2^(k+1) $ <fkrecursive>
 Note that $S(k+1)$ and $F(k+1)$ as defined at @skrecursive and @fkrecursive share the exact same recursive structure!
 In fact, now the proof of the inductive step, $P_k => P_(k+1)$, writes itself.
 $ S(k+1) eq.quest F(k+1) $
-Use the recursive definitions from @skrecursive and @fkrecursive
+Use the recursive definitions from @skrecursive and @fkrecursive:
 $ S(k) + 2^(k+1) eq.quest F(k) + 2^(k+1) $
 Subtract 2^(k+1) from both sides:
 $ S(k) eq.quest F(k) $ 
@@ -113,3 +113,76 @@ Again, from the previous section, the key idea is the exponential growth of $S(n
 Visually at each level, $2^d$ more nodes are introduced.
 So my candidate function to match or approximate $S(n)$ could grow exponentially. And the base is 2. So why not simply try the function $2^(n+1)$?
 Indeed $S(n) tilde.equiv 2^(n+1)$. And I'll present a visual "proof" of this.
+$2^n$ is very convenient with this visual tree approach because it corresponds to the number of leaves at a given level.
+
+=== Approach 4: Binary, rectifying the approximation
+Preface. Knowing binary will help. But it is not a hard prerequisite
+
+consider (unsigned) binary representation of 7 (0b0111) and 8 (0b1000) using 4 bits
+For readers that are not acquinted with binary, this is not something to be scared about.
+this simply means 7 = 1*2^0 + 1*2^1 + 1*2^2 + 0*2^3 = 1 + 2 + 4
+and 8 = 0*2^0 + 0*2^1 + 0*2^2 + 1*2^3 = 8
+
+Quick introduction to binary:
+The 1's and 0's record presense or absence of a particular power of two, 
+and the powers of 2 increase from rightmost to leftmost, just like our typical decimal notation where one's place is rightmost, followed by ten's, hundred's, and so forth.
+0bABCD = D*2^0 + C*2^1 + B*2^2 + A*2^3 where A,B,C, and D are all binary digits meaning they take on values 0 or 1.
+
+So the sum 1+2+4 or S(2) = 7. So just 1 off from 8, the next power of 2.
+If we add 1 to 0b0111, there's a domino effect of carrying over 1s and we get 0b1000
+Even if you don't know binary consider what happens when I evaluate 1 + (1 + 2 + 4) as follows
+first let's rewrite all terms as powers of 2 as that's the heart of this document
+2^0 + (2^0 + 2^1 + 2^2)
+group first 2 terms
+(2^0+2^0) + (2^1 + 2^2)
+simplify the grouping
+2^1 + (2^1 + 2^2)
+group first 2 terms
+(2^1+2^1) + (2^2)
+simplify the grouping
+2^2 + (2^2)
+group first 2 terms
+(2^2 + 2^2)
+simplify the grouping
+2^3
+Note the recursive nature of this process, the domino effect!
+Given
+2^k + (2^k + 2^(k+1) + ... )
+We perform the 2 steps of grouping first 2 terms and simplyfing
+2^(k+1) + (2^(k+1) + 2^(k+2) + ... )
+and we get expression of same structure except one higher power of 2
+
+So there's repeated doubling
+To recap, last visual approach, we saw repeated halving.
+Each level S(k), we represented as 2^k + S(k-1)
+S(2) = 4 + S(1), S(1) = 2 + S(0)
+S(k) = 2^k + S(k-1)
+S(k-1) = 2^(k-1) + S(k-2)
+S(k-2) = 2^(k-2) + S(k-3)
+To solve problem K, we need problem K-1.
+To solve problem K-1, we need problem K-2
+And so forth till 0th problem.
+From large problem we work backwards from small problem
+
+But this way is more direct, from small subproblem, we work towards larger subproblems directly
+1 + 1 = 2 = S(0) + 1
+2 + 2 = 4 = S(1) + 1
+4 + 4 = 8 = S(2) + 1
+We're solving 1+problem K along the route to solving 1+problem K+1
+
+Bother bringing up domino effect in decimal (ex 1000 = 999+1) or arbitrary base
+like idea is get 111 in some base, b. Then scale by b-1 so that adding 1 causes the domino cascade?
+
+
+
+CS aside:
+we see this idea all the time in bit manipulation that take advantage of 2s complement.
+Example that comes to mind is BIT or Fenwick tree technique to get least significant 1 bit.
+
+domino affect
+from prev approach to 8
+we subtracted 4
+then we subtracted 2
+then subtracted 1
+and left with 0~=1 
+So binary has a domino affect
