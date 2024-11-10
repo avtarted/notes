@@ -12,8 +12,8 @@ This article will
 focus on the recursive nature of this sum, 
 include tree visualizations, 
 discuss how I use approximations to simplify my reasoning, 
-include a proof using binary, 
-and finally, throughout this article, compare and contrast the various approaches, distilling what I believe are key insights.
+include a proof using binary representation, 
+and finally, throughout this article, compare and contrast the various approaches, distilling what I believe are some key insights.
 
 == Prerequisites
 Knowledge of proof by induction.
@@ -47,10 +47,11 @@ $ 2^0 + 2^1 + ... + 2^k = 2^(k+1) - 1 $ <pk>
 And here is the claim $P_(k+1)$:
 $ 2^0 + 2^1 + ... + 2^k + 2^(k+1) = 2^(k+2) - 1 $ <pkplus1>
 
-Let me prove that $P_k => P_(k+1)$ in 3 ways:
+Let me prove that $P_k => P_(k+1)$ in the following ways:
 + the textbook way
 + essentially the textbook way, but with a focus on the recursive natures of $S(n)$ and $F(n)$.
 + a visual approach, using tree diagrams
++ using binary representation
 
 === Approach 1: Textbook Induction
 Assuming @pk is true, I want to show that @pkplus1 is true as well.
