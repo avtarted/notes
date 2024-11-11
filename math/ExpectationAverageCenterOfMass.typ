@@ -10,7 +10,7 @@ And use these averages to motivate a proposed definition of, and the computation
 Finally, I'll derive why the expectation can be viewed as the center of mass of a discrete probability distribution.
 Everything will be done using discrete, non-continuous, examples.
 
-== Averages and Expectation
+== Average
 I'll start of with increasingly complex calculations of averages and showcase varying interpretations to understand them.
 I'll motivate expectations as a weighted average and connect the work to uniform and non-uniform discrete probability.
 
@@ -96,25 +96,26 @@ But now and henceforth, instead of (A, A, A+K) lets view it as (M-D1, M-D1, M+D2
 where D_i are the absolute difference of the ith number from M, abs(a_i - M)
 and where M is the average (M for mean). (M-(M-A), M-(M-A), M + (B-M))
 
-=== Expectation of Weighted Coin Flip
-I'll recyle the (A,B) and (A,A,B) cases to motivate expectation. I'll continue to keep A = 1 and B = 2.
+== Average and Expectation: Weighted Coin Flip
+I'll recyle the (A,B) and (A,A,B) cases to motivate intuition about the term expectation. I'll continue to keep A = 1 and B = 2.
 Flip heads get A, flip tails, get B both equally likely in the (A,B) case
 But for the (A,A,B) case we have P(heads) = 2/3 and P(tails) = 1/3.
-Like imagine a bag with the elements (A,A,B). If we were to draw one out randomly, we'd expect to get A 2/3rds of the time and B 1/3rd of the time.
+Like imagine a bag with the elements (A,A,B). If we were to draw one out randomly a bunch of times (sampling with replacement), we'd expect to get A 2/3rds of the time and B 1/3rd of the time.
 So 2/3 and 1/3 are probabilities and weights and they are connected to the multiplicities of A and B.
+Again, note that this is equivalent to performing a weighted coin flip with P(Heads) = 2/3 and P(Tails) = 1/3.
 
 Aside: Going the other direction, I have the probability space (A:2/3, B:1/3) and from that I can connect it to (A,A,B).
 But the general case might not be so clean, there might not be a "GCD" of 1/3 in the probability distribution or a "GCD" or, non-normalized, a "GCD" of 1 where A's count is 1 and B's count is 2 and 1 divides 2 as 2 is double 1 (GCD in quotes because actual GCDs are integers, and that too, integers than 1)
 Like the key distinction I'm positing is that B's weight may not be exactly an integer multiple of A's weight.
 It's still a discrete probability space, but the weights (A: P(A), B:P(B)) may be such that P(A) does not cleanly divide P(B)
-I believe it's not the weights that matter as it is their relative composition which in this case is countB:countA = 2:1
+I maintain that it's not the weights that matter as it is their relative composition which in this case is countB:countA = 2:1
 so I can still use takeaways for the simple, discrete, cases and extend it to general discrete probability spaces.
 I'll proceed to explain why I'm comfortable doing so generally or give myself some intuition at least.
 A general discrete probability space is really similar to a list of letters (A, A, B) the letters being individual outcomes but each letter has a real number probability associated with it.
 And these probabilities sum to 1.
 In a sense our list of letters constructions like (A,A,B) are an example of uniform probability space so first A with weight 1/3, second A with weight 1/3, and B with weight 1/3
 Note 1/3+1/3+1/3 = 1. So really we're paritioning a whole pie, the pie representing the number 1 or 100%, into 3 equal slices, 2 A slices and 1 B slice.
-Bur more generally we can parition into different slices as well, their slice compositions not being clean like 1:1:1 or 2:1 but instead something messier where there's no slice that can serve as a GCD-I mean perhaps we can approximate it at various granulalities, but I digress.
+Bur more generally we can parition into different slices as well, their slice compositions not being clean like 1:1:1 or 2:1 but instead something messier where there's no slice that can serve as a GCD-I mean perhaps we can approximate it at various granulalities that divide all slices, but I digress.
 At the end of the day, it's all just a partion of 1 and probabilities descript the relative size of the partitions to each other.
 
 I'll actually take a step back first and examine (A,0) and (0,B) cases. I want to isolate the impact of each individual outcome
@@ -123,7 +124,8 @@ If we were to do like 1000 coin flips, we'd expect 500 heads. Our reward would b
 If we do 2000, we'd expect 1000 heads. Our reward would be $1000*A$.
 As we can see, it scales linearly. But flip once, it's like some quantum/schrodinger value of being half of a head so we reap half the reward. 
 That is our expected reward is A/2. Same for (0,B) case, B/2. And we can add them when thinking about (A, B) case. Isn't linearity great?
-Back to (A,B) say 1000 tosses, 500heads 500tails produce reward of $500*A + 500*B$ and scale down to 1 toss by linearity, expected profit is A/2 + B/2
+Back to (A,B). It's like (A,0) and (B,0) are basis vectors and adding them gives us (A,B) by linearity.
+Let's see this in action. Again, say 1000 tosses, 500heads 500tails produce reward of $500*A + 500*B$ and scale down to 1 toss by linearity, expected profit is A/2 + B/2
 Which is the average of (A,B)
 We can do this for (A,A,B), 1000 tosses now $~667$ heads and $~333$ tails, so the expected profit is roughly 667*A + 333*B
 Scaled down to 1 toss, again by linearity, expected profit is $2/3 * A + 1/3 * B$
@@ -133,14 +135,16 @@ And for the general case of definition expectation of a random variable over a p
 it generalizes to the sum of all the outcomes weighted by their associated probabilities, so again, a weighted average.
 Just to hammer this expectation tied to weighted average point a final time, the average itself of some N numbers is, again, the expectation using the uniform weight 1/N.
 
-=== Center of Mass, Discrete and 1D
-So, I lied, but not really. While I'm going to hammer expectation and averages again, but in a way I already completely did this earlier when I considered averages from the perspective of the center, splitting distances to enfore the sums of the deviations from the right and left added up and essentially, that's the end of it and we're already conceptually done.
+== Center of Mass, Discrete and 1D
+So, I lied, but not really. While I'm going to hammer expectation and averages again, but in a way I moreorless already did this earlier when I considered averages of outcomes from the perspective of the center, splitting distances (weighted by probability of a given outcome) to enfore the sums of the distance deviations from the right and left added up. Essentially, that's the end of it and we're already conceptually done.
 
 This section is purely for fun, and it's actually the reason I decided to compose this note: because I read CS70 note relating expectation to center of mass of probability distribution
 Wanted to explore it, and I was pleased, and afterwards decided to contemplate what average really means and all of this resulted in me decided to memorialize my thought process.
 
+=== Moment
 Ok, let me get down to business. Say we're on a 1D number line with some points spaced out. Each point has a mass of 1. Note that points may share the same location: this does not affect the algebra.
-We could view K points with the same location as a singular point just with a mass of K. It's all the same, just different groupings.
+We could view K points with the same location as a singular point, P, just with a mass of K. It's all the same, just different groupings.
+So from now each point P has mass M. Let's have them be clean positive integers. The point P specifies its location on the number line and M its mass.
 The question is, what is the center of mass of these points.
 
 First, we must introduce the concept of "moment".
@@ -152,7 +156,7 @@ Now what the center of mass is, is a point $C$ that may be virtual and not one o
 There are 2 classes of points, those that fall to right of $C$ or to the left. Technically there are 3 classes, points that lie on $C$, but with zero distance these have no moment contribution.
 
 So, again, at the center, the sum of all the right moments equals the sum of all the left moments.
-This ties into averages and splitting distance from the mean in that the distance is a component but the weight is 1/N and again, generalize to weight with the probability to get expectation
+This ties into averages and splitting distance from the mean in that the distance is a component but the weight is 1/N and again, generalize to arbitrary discrete probability distributions to weight with the probability to get expectation.
 
 === Center of Mass as a Point Mass
 So how do I actually compute the center of mass, $C$, as if this were a physics problem?
