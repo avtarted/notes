@@ -127,13 +127,71 @@ Back to (A,B) say 1000 tosses, 500heads 500tails produce reward of $500*A + 500*
 Which is the average of (A,B)
 We can do this for (A,A,B), 1000 tosses now $~667$ heads and $~333$ tails, so the expected profit is roughly 667*A + 333*B
 Scaled down to 1 toss, again by linearity, expected profit is $2/3 * A + 1/3 * B$
-Which is why expectated outcome of our random variable, in our case the reward we get doing a single coin flip, is computed by A*P(A) + B*P(B)
+Which is why expectated outcome of our random variable, in our case the reward we get doing a single coin flip, is computed by A*P(A) + B*P(B), and is a weighted average.
+
 And for the general case of definition expectation of a random variable over a probability space,
-it generalizes to the sum of all the outcomes weighted by their associated probabilities.
+it generalizes to the sum of all the outcomes weighted by their associated probabilities, so again, a weighted average.
+Just to hammer this expectation tied to weighted average point a final time, the average itself of some N numbers is, again, the expectation using the uniform weight 1/N.
 
 === Center of Mass, Discrete and 1D
-I would be done, but the reason I wrote this note is because I read CS70 note relating expectation to center of mass of probability distribution
-Wanted to explore it and I was pleased. So I'll start with a detour
+So, I lied, but not really. While I'm going to hammer expectation and averages again, but in a way I already completely did this earlier when I considered averages from the perspective of the center, splitting distances to enfore the sums of the deviations from the right and left added up and essentially, that's the end of it and we're already conceptually done.
 
-Again, consequence of linearity.
+This section is purely for fun, and it's actually the reason I decided to compose this node: because I read CS70 note relating expectation to center of mass of probability distribution
+Wanted to explore it, and I was pleased, and afterwards decided to contemplate what average really means and all of this resulted in me decided to memorialize my thought process.
+
+Ok, let me get down to business. Say we're on a 1D number line with some points spaced out. Each point has a mass of 1. Note that points may share the same location: this does not affect the algebra.
+We could view K points with the same location as a singular point just with a mass of K. It's all the same, just different groupings.
+The question is, what is the center of mass of these points.
+
+First, we must introduce the concept of "moment".
+Let's consider the moment about a point C (C for center), and this point may be virtual, a conceptual point, just a location on the numberline we pin down
+Then we need an actual, non-virtual, point P is abs(P-C)*mass(P) Classic see-saw example.
+So we can increase the moment that P produces about C in 2 ways, 2 levels we can pull: place P further away from C or increase the mass of P.
+
+Now what the center of mass is, is a point C that may be virtual and not one of the points in our list, where the sum of all the moments of all the points to the left of C equals  the moments of all the points to the right of C..
+There are 2 classes of points, those that fall to right of C or to the left. Technically there are 3 classes, points that lie on C, but with zero distance these have no moment contribution.
+
+So, again, at the center, the sum of all the right moments equals the sum of all the left moments.
+This ties into averages and splitting distance from the mean in that the distance is a component but the weight is 1/N and again, generalize to weight with the probability to get expectation
+
+=== Center of Mass as a Point Mass
+So how to actually compute the center of mass in a physics problem, like how do they do it.
+Idea is actually to treat the entire constellation of points as a single point mass.
+
+Consider an origin, O, somewhere super left of all our points pined at location 0, lets say (O and 0 look alike so that's cool).
+Then I know the total moment about the origin from the points as simply sum of their values, sum(p_i)
+
+But the key trick from physics that's often just presented without justification is I can express this moment in terms of the center of mass as well, C*N where C is the center of mass location and N is the number of points, so the aggregate weight
+So we have C*N = sum(p_i) <pointmass>
+
+The question is why @pointmass is true.
+My idea that helped me convince myself of the correctness is to consider each point, p_i's contribution to the total moment about O in terms moment of p_i about C
+Consider the 2 cases of points p_i as being stritcly greater than C or less than C.
+For p_i > C we have p_i = C + K
+let's say p_i has mass m_i then we have:
+$ m_i*p_i = m_i*(C + K) $
+and by the magic of linearity's distribution splitting up C and K:
+$ m_i*p_i = m_i*C + m_i*K) $
+So this states that $m_i*p_i$, p_i's contribution to the moment about O, can be split into two terms which are the moment of p_i about C ($m_i*K$) and the moment of p_i about O if it were positioned at the center of mass, C.
+so doing this for all points to the right of C and summing, we have C*sum(m_i) + sum of all moments to the right of C
+And we can do the same for points to the left of C where p_i = C - K. Only thing is a sign swap
+And again doing this for all points to the left of C, this time we get the negative of the sum of all moments to the left of C.
+So now summing these right and left sums, we know by definition of C being center of mass, the sum of all moments to the right of C and the sum of all moments to the left of C will cancel out.
+So we're done. It's all a consequence of linearity, splitting p_i into C and some delta.
+
+Can use the same equation to compute expectation, but note the sum of the masses in this case is 1 so it's completely consistent with the actual definition of expectation.
+
+So what are the physics 'moment' analogue then for expectation. Well again, as we've seen so much, it's the deviation or distance from the expected value.
+I'd like to part with a final interpretation. Consider this to be like a gamble, mystery box where we can draw varying numbers with varying probabilities.
+And we have some expected value, M (again, M for mean). We have a choice, either pull a number and get it's value in cash, or take M in cash.
+
+Mathematically they are the same, but as we learn, humans are not linear and think about risk, which is why insurance and gambling are profitable-house always wins.
+
+Then the numbers we can draw greater than M, we get some profit and the profit we can reap itself an expectation. Say we draw a number N, N > M. Then it's contribution to expected profit (N-M)*P(N)
+And again, summing them over all N we get the expected surplus profit from M.
+And naturally, we could then do the same thing to get the expected loss from M, and so M is set such that these expectations are equal.
+
+It's all central and balanced, which is neat.
+
+
 
