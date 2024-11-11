@@ -1,4 +1,5 @@
 #set math.equation(numbering: "(1)")
+#let avg = $op("avg")$
 
 = Expectation, Average, and Center of Mass
 
@@ -17,20 +18,20 @@ I'll motivate expectations as a weighted average and connect the work to uniform
 Let's start off with the simplest case of a meaningful average, the average of two numbers, $A$ and $B$.
 For now, let us assume that $A$ and $B$ are distinct integers and also that $B > A$. Let's set $A=1$ and $B=2$.
 Let's recall how we compute the average of a discrete list of numbers $(a_1, a_2,...,a_n)$:
-$ "avg"((a_1, a_2,...,a_n)) = 1/N*sum_(i=0)^n a_i $ <avg>
+$ avg((a_1, a_2,...,a_n)) = 1/N*sum_(i=0)^n a_i $ <avg>
 Note, we can also push the 1/N inside the summation as follows:
-$ Avg((a_1, a_2,...,a_n)) = sum_(i=0)^n a_i/N $ <avg2>
+$ avg((a_1, a_2,...,a_n)) = sum_(i=0)^n a_i/N $ <avg2>
 
 This suggests that each constituent number, a_i, has a uniform "weight" of 1/N, 
 and clarifies it's contribution to the final average is a_i/N.
 
 From @avg, it follows that
-$ Avg((A,B)) = (A+B)/2 $ <avg2num1>
-So we can compute $Avg((1,2))=(1+2)/2=1.5$.
+$ avg((A,B)) = (A+B)/2 $ <avg2num1>
+So we can compute $avg((1,2))=(1+2)/2=1.5$.
 
 There is another way to compute this average that I will dive into:
-$ Avg((A,B)) = A + (B-A)/2 $ <avg2num2>
-Indeed, this seems to check out: $Avg((1,2))=1+(2-1)/2=1.5$.
+$ avg((A,B)) = A + (B-A)/2 $ <avg2num2>
+Indeed, this seems to check out: $avg((1,2))=1+(2-1)/2=1.5$.
 
 CS aside: This is the approach that I use, like most coders, to implement binary seach: ``` a + ((b-a)>>1)```.
 Where `a` and `b` are the start and end indices, respectively, of the window we are binary searching on (and where ```>>1``` is a bit shift accomplishing halving).
@@ -49,24 +50,24 @@ I would like to preface this section by stating that it is semi-optional, but I 
 
 Say we have (A,B,C) where C > B > A
 How solve this. Back to (A, B) case where I view B = A + K
-then I am essentially doing a translation shift by A: $Avg(A, B) = A + Avg(0,B-A) = A + Avg(0,K) = A + 1/2 * K$
+then I am essentially doing a translation shift by A: $avg(A, B) = A + avg(0,B-A) = A + avg(0,K) = A + 1/2 * K$
 TODO insert histogram with two bars
 Let's say I have a discrete list with all unique numbers, then I can generalize this.
 Idea is I can extract out the lowest number and zero it out, so the list has 1 less unique number, but all the remaining numbers have the lowest subtracted from it.
 That is:
-$ Avg(a_1,a_2,...a_n) = a_1 + Avg(0, a_2-a_1,...,a_n-a_1) $
+$ avg(a_1,a_2,...a_n) = a_1 + avg(0, a_2-a_1,...,a_n-a_1) $
 But, including 0, we still have N numbers, we want to have N-1 numbers
 I believe the general solution, the desired recursive formulation, is simply:
-$ Avg(a_1,a_2,...a_n) = a_1 + (n-1)/n * Avg(a_2,...,a_n) $
+$ avg(a_1,a_2,...a_n) = a_1 + (n-1)/n * avg(a_2,...,a_n) $
 
 Aside: Where does (n-1)/n come from? Well from @avg and the first term being 0, we have
-$ Avg(0, a_2-a_1,...,a_n-a_1) = 1/N * sum_(i=2)^n (a_i-a_0) $
+$ avg(0, a_2-a_1,...,a_n-a_1) = 1/N * sum_(i=2)^n (a_i-a_0) $
 But rearranging @avg, we can express the previous RHS's summation in turn as an average:
-$ sum_(i=2)^n (a_i-a_0)= Avg(a_2-a_0,...,a_n-a_0)*(N-1) $
+$ sum_(i=2)^n (a_i-a_0)= avg(a_2-a_0,...,a_n-a_0)*(N-1) $
 And plugging this back in yields the desired (N-1)/N
 
 Let's test this problem transformation to our (A,B,C) case?
-$ Avg(A,B,C) = A + 2/3 * Avg(B,C) $
+$ avg(A,B,C) = A + 2/3 * avg(B,C) $
 Let me work this out with $(1,2,3)$ which I clearly know must be 2.
 Indeed, expanding it all out, the math checks out $1 + 2/3*(1+1/2) = 2$
 
