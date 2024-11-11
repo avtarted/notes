@@ -161,7 +161,7 @@ This ties into averages and splitting distance from the mean in that the distanc
 === Center of Mass as a Point Mass
 So how do I actually compute the center of mass, $C$, as if this were a physics problem?
 I am given points $p_i$ each with mass $m_i$. There is a formula that computes $C$:
-$ C = sum_i p_i*m_i / sum_i m_i $ <centermass>
+$ C = (sum_i p_i*m_i) / (sum_i m_i) $ <centermass>
 Deriving this is straightforward. Simply set sum of all moments about $C$ to 0. That is, $sum_i (p_i - c)*m_i = 0$.
 
 From @centermass, we may notice a neat idea is actually to treat the entire constellation of points as a single point mass.
@@ -169,32 +169,33 @@ This is a trick, or rather a concept, many see in physics.
 That is, we can rearrange @centermass as such:
 $ C*sum_i m_i = sum_i p_i*m_i $ <pointmass>
 Consider an origin, $O$, somewhere super left of all our points pined at location 0, lets say. (O and 0 look alike so that's cool).
-Then the LHS of @pointmass is the total moment about the origin, $O$, that a point mass located at $C$ with mass $sum_i m_i$ produces.
+Then the LHS of @pointmass is the total moment about the origin, $O$, that a point mass located at $C$ with mass $sum_i m_i$, that is the total mass of the system, produces.
 And the RHS is the total moment about the origin that each individual point produces.
 
 Why am I introducing this center of mass as the point mass location concept? Well, it's how I treat expectation. Visually, sure, it serves as the balance point.
 But when we actually want to use an expectation of a random variable, we're treating it as a point mass. The point mass is the average, representative, point location. It summarizes the points.
-Just like the expectation is the average, representative, value of the random variable. It summarizes the random variable.
+If we want to compute the cumulative moment the entire system produces about any given origin (and nothing forces origin to be 0, only relative distances matter as you can verify after looking at the subsequent math) all we need is the cumulative mass and the location of the center of mass and then we need not concern outselves with the individual points and their associated masses.
+This is exactly like the expectation is the average, representative, value of the random variable. It summarizes the random variable. It's the location of the center of the mass and the cumulative mass if we were to extend the analogy is simply 1, which is convenient as 1 is multiplicative identity. That is, the expectation is simply the center of mass multiplied by 1 or again, simply the center of mass.
 
-I would like to present a similar approach and aim to get a formula for the point mass location directly and then show that it happens to be exactly at the center of mass. All derivations I presume are the same and boil down to right and left moments cancanceling somewhere and this will be no different, so here I go.
+I would like to present a similar approach and aim to get a formula for the point mass location directly and then show that it happens to be exactly at the center of mass. All derivations I presume are the same and boil down to right and left moments cancanceling somewhere and this will be no different, and again I encourage reader to think about non-zero origin as well, so here I go.
 
-The each is to consider each point $p_i$'s contribution to the total moment about $O$ in terms its own moment about $C$
+Consider each point $p_i$'s contribution to the total moment about $O$ in terms its own moment about $C$.
 Consider the 2 cases of points $p_i$ as being stritcly greater than $C$ or less than $C$. For now, let me ignore the third case where points are located directly on $C$ as they effect no moment.
-For $p_i > C$ we have $p_i = C + K$
+For $p_i > C$ we have $p_i = C + K$.
 $p_i$ has mass $m_i$ so I have:
 $ m_i*p_i = m_i*(C + K) $
 and by the magic of linearity's distribution splitting up C and K:
 $ m_i*p_i = m_i*C + m_i*K) $
-So this states that $m_i*p_i$, $p_i$'s contribution to the moment about $O$, can be split into two terms which are the moment of $p_i$ about $C$ ($m_i*K$) and the moment of $p_i$ about $O$ if it were positioned at the center of mass, $C$.
-so doing this for all points to the right of $C$ and summing, we have $C*sum(m_i)$ + sum of all moments to the right of $C$
+So this states that $m_i*p_i$, $p_i$'s contribution to the moment about $O$, can be split into two terms which are the moment of $p_i$ about $C$ (given by $m_i*K$) and the moment of $p_i$ about $O$ if it were positioned at the center of mass, $C$ (given by $m_i*C$).
+Doing this for all points to the right of $C$ and summing, we have $C*sum(m_i)$ + sum of all moments to the right of $C$
 And we can do the same for points to the left of $C$ where $p_i = C - K$. Only thing is a sign swap
 And again doing this for all points to the left of $C$, this time we get the negative of the sum of all moments to the left of $C$.
 So now summing these right and left sums, we know by definition of $C$ being center of mass, the sum of all moments to the right of $C$ and the sum of all moments to the left of $C$ will cancel out.
-So we're done. It's all a consequence of linearity, splitting $p_i$ into $C$ and some delta.
+So we're done. We end up with the point mass relation @pointmass. It's all a consequence of linearity, splitting $p_i$ into $C$ and some delta.
 
 Can use the same equation to compute expectation, but note the sum of the masses in this case is 1 so it's completely consistent with the actual definition of expectation.
 
-So what are the physics 'moment' analogue then for expectation. Well again, as we've seen so much, it's the deviation or distance from the expected value.
+So what are the physics 'moment' analogue then for expectation. Well again, as we've seen so much, it's the deviation or distance from the expected value weighted by the associated probability.
 I'd like to part with a final interpretation. Consider this to be like a gamble, mystery box where we can draw varying numbers with varying probabilities.
 And we have some expected value, $M$ (again, $M$ for mean). We have a choice, either pull a number and get it's value in cash, or take $M$ in cash.
 
@@ -206,6 +207,3 @@ And again, summing them over all N we get the expected surplus profit from $M$.
 And naturally, we could then do the same thing to get the expected loss from $M$, and so $M$ is set such that these expectations are equal.
 
 It's all central and balanced, which is neat.
-
-
-
