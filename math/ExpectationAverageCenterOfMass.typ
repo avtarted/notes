@@ -61,13 +61,15 @@ I believe the general solution, the desired recursive formulation, is simply:
 $ avg(a_1,a_2,...a_n) = a_1 + (n-1)/n * avg(a_2,...,a_n) $
 
 Aside: Where does (n-1)/n come from? Well from @avg and the first term being 0, we have
-$ avg(0, a_2-a_1,...,a_n-a_1) = 1/N * sum_(i=2)^n (a_i-a_0) $
-But rearranging @avg, we can express the previous RHS's summation in turn as an average:
+$ avg(0, a_2-a_1,...,a_n-a_1) = 1/N * sum_(i=2)^n (a_i-a_1) $ <temp1>
+Note the subscript in the summation being $2$.
+
+By rearranging @avg, we can express the summation in turn as an average:
 $ sum_(i=2)^n (a_i-a_0)= avg(a_2-a_0,...,a_n-a_0)*(N-1) $
-And plugging this back in yields the desired (N-1)/N
+Plugging this back in @temp1 yields the desired (N-1)/N
 
 Let's test this problem transformation to our (A,B,C) case?
-$ avg(A,B,C) = A + 2/3 * avg(B,C) $
+$ avg(A,B,C) = A + 2/3 * avg(B-A,C-A) $
 Let me work this out with $(1,2,3)$ which I clearly know must be 2.
 Indeed, expanding it all out, the math checks out $1 + 2/3*(1+1/2) = 2$
 
@@ -97,7 +99,23 @@ and where M is the average (M for mean). (M-(M-A), M-(M-A), M + (B-M))
 === Expectation of Weighted Coin Flip
 I'll recyle the (A,B) and (A,A,B) cases to motivate expectation. I'll continue to keep A = 1 and B = 2.
 Flip heads get A, flip tails, get B both equally likely in the (A,B) case
-But for the (A,A,B) case we have P(heads) = 2/3 and P(tails) = 1/3. So 'weights' come into play.
+But for the (A,A,B) case we have P(heads) = 2/3 and P(tails) = 1/3.
+Like imagine a bag with the elements (A,A,B). If we were to draw one out randomly, we'd expect to get A 2/3rds of the time and B 1/3rd of the time.
+So 2/3 and 1/3 are probabilities and weights and they are connected to the multiplicities of A and B.
+
+Aside: Going the other direction, I have the probability space (A:2/3, B:1/3) and from that I can connect it to (A,A,B).
+But the general case might not be so clean, there might not be a "GCD" of 1/3 in the probability distribution or a "GCD" or, non-normalized, a "GCD" of 1 where A's count is 1 and B's count is 2 and 1 divides 2 as 2 is double 1 (GCD in quotes because actual GCDs are integers, and that too, integers than 1)
+Like the key distinction I'm positing is that B's weight may not be exactly an integer multiple of A's weight.
+It's still a discrete probability space, but the weights (A: P(A), B:P(B)) may be such that P(A) does not cleanly divide P(B)
+I believe it's not the weights that matter as it is their relative composition which in this case is countB:countA = 2:1
+so I can still use takeaways for the simple, discrete, cases and extend it to general discrete probability spaces.
+I'll proceed to explain why I'm comfortable doing so generally or give myself some intuition at least.
+A general discrete probability space is really similar to a list of letters (A, A, B) the letters being individual outcomes but each letter has a real number probability associated with it.
+And these probabilities sum to 1.
+In a sense our list of letters constructions like (A,A,B) are an example of uniform probability space so first A with weight 1/3, second A with weight 1/3, and B with weight 1/3
+Note 1/3+1/3+1/3 = 1. So really we're paritioning a whole pie, the pie representing the number 1 or 100%, into 3 equal slices, 2 A slices and 1 B slice.
+Bur more generally we can parition into different slices as well, their slice compositions not being clean like 1:1:1 or 2:1 but instead something messier where there's no slice that can serve as a GCD-I mean perhaps we can approximate it at various granulalities, but I digress.
+At the end of the day, it's all just a partion of 1 and probabilities descript the relative size of the partitions to each other.
 
 I'll actually take a step back first and examine (A,0) and (0,B) cases. I want to isolate the impact of each individual outcome
 (A,0) case first, Say both outcomes heads or tails are equally likely. If we flip heads we get A reward but if we flip tails we get 0 reward.
@@ -105,11 +123,13 @@ If we were to do like 1000 coin flips, we'd expect 500 heads. Our reward would b
 If we do 2000, we'd expect 1000 heads. Our reward would be $1000*A$.
 As we can see, it scales linearly. But flip once, it's like some quantum/schrodinger value of being half of a head so we reap half the reward. 
 That is our expected reward is A/2. Same for (0,B) case, B/2. And we can add them when thinking about (A, B) case. Isn't linearity great?
-Back to (A,B) say 1000 tosses, 500heads 500tails produce reward of $500*A + 500*B$ and scale down to 1 toss, expected profit is A/2 + B/2
+Back to (A,B) say 1000 tosses, 500heads 500tails produce reward of $500*A + 500*B$ and scale down to 1 toss by linearity, expected profit is A/2 + B/2
 Which is the average of (A,B)
-We can do this for (A,A,B) now ~667 heads, ~333 tails scaled down to 1 toss, expected profit is $2/3 * A + 1/3 * B$
-Which is why expectated outcome of our random variable, the reward we get doing a single coin flip, is the average reward we expect it to take on.
-The probabilities of each outcome are the weights.
+We can do this for (A,A,B), 1000 tosses now $~667$ heads and $~333$ tails, so the expected profit is roughly 667*A + 333*B
+Scaled down to 1 toss, again by linearity, expected profit is $2/3 * A + 1/3 * B$
+Which is why expectated outcome of our random variable, in our case the reward we get doing a single coin flip, is computed by A*P(A) + B*P(B)
+And for the general case of definition expectation of a random variable over a probability space,
+it generalizes to the sum of all the outcomes weighted by their associated probabilities.
 
 === Center of Mass, Discrete and 1D
 I would be done, but the reason I wrote this note is because I read CS70 note relating expectation to center of mass of probability distribution
