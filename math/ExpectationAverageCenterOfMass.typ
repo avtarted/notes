@@ -84,17 +84,31 @@ A has a "weight", twice that of the "weight" of B.
 A's weight is 2/3 and B's weight is 1/3.
 
 Following in my previous "in-terms-of-lowest-number" footsteps, rewrite this as (A,A,A+K)
-So the average is then the sum divided by 3 which is (3A+K)/3 or AandK/3. So it's like we're splitting the distance by 3. 
+So the average is then the sum divided by 3 which is (3A+K)/3 or A+K/3. So it's like we're splitting the distance by 3. 
 
 Note, like last section, that this is not fun to generalize to more than two distinct numbers, say (A,B,C). So I'll change perpective.
 
 === Solution: Symmetry About Center
-From last example of (1,1,2) no coincidence where the average was. the distance from 1 and 1/3 to 1 vs to 2 those distances relate to multiplicity of 1 being twice and 2 once.
-Let's explore this from the perspective of the center.
-In past we took the lowest number and viewed the rest as offsets past that.
-But now and henceforth, instead of (A, A, A+K) lets view it as (M-D1, M-D1, M+D2)
+From last example of (1,1,2) no coincidence where the average was. the distance from 1+1/3 to 1 vs to 2 those distances relate to multiplicity of 1 being twice and 2 once.
+Let me explore this from the perspective of the center.
+So far I've been taking the lowest number and viewing the rest as offsets past that. The term 'difference' in 'split the difference' was relative to the lowest number.
+But now, let me assume I already know the average, $M$ ($M$ for mean) of my lists so I will write all elements in my lists in terms of M and differences from M.
+
+So instead of (A, A, A+K) lets view it as (M-D1, M-D1, M+D2)
 where D_i are the absolute difference of the ith number from M, abs(a_i - M)
-and where M is the average (M for mean). (M-(M-A), M-(M-A), M + (B-M))
+(A, A, A+K) = (M-D1, M-D1, M+D2) = (M-(M-A), M-(M-A), M + (B-M))
+We know the sum of the elements of this list is 3*M by definition of average, @avg.
+$ A + A + (A+K) = 3M = M + M + M + 2*D_1 + D_2 $
+$ 2D_1 + D_2 = 0 $
+For the case of (1,1,2), D1 is the deficit distance on the numberline 1/3 from the average and D2 is surplus distance 2/3 from the average.
+And M is such that these distances balance out.
+
+In general for a given list $(a_1, ..., a_n)$ with average $M$, where $d_i$ is the offset from the average, $d_i = a_i - M$, we have:
+$ sum_(i=0)^n a_i = N*M = sum_(i=0)^n M + d_i = N*M + sum_(i=0)^n d_i $
+This implies $sum_(i=0)^n d_i = 0$ or the distances from the average sum to zero.
+Elements greater than the average contribute positive $d_i$s and elements less will contribute negative $d_i$s. But they will balance each other out.
+This results in a nice visual representation of the average as a central point where all the distance offsets summed up cancel each other out.
+TODO draw numberline, plot some a_i and M, draw "distance lines" from M to all a_i and color these lines in 2 different colors for those to the right and left of M, say green right and red left (colors selected from a profit loss view) and then write as caption or somethere below sum(len(red)) = sum(len(green))
 
 == Average and Expectation: Weighted Coin Flip
 I'll recyle the (A,B) and (A,A,B) cases to motivate intuition about the term expectation. I'll continue to keep A = 1 and B = 2.
