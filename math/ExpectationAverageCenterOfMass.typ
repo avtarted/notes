@@ -136,18 +136,20 @@ I'll actually take a step back first and examine (A,0) and (0,B) cases. I want t
 (A,0) case first, Say both outcomes heads or tails are equally likely. If we flip heads we get A reward but if we flip tails we get 0 reward.
 If we were to do like 1000 coin flips, we'd expect 500 heads. Our reward would be $500*A$.
 If we do 2000, we'd expect 1000 heads. Our reward would be $1000*A$.
-As we can see, it scales linearly. But flip once, it's like some quantum/schrodinger value of being half of a head so we reap half the reward. 
-That is our expected reward is A/2. Same for (0,B) case, B/2. And we can add them when thinking about (A, B) case. Isn't linearity great?
+As we can see, our expectation (loosely, intuitively defined) scales linearly. And we can apply this linearity to a single coin flip. So flip once and we get A/2; it's like some quantum/schrodinger value of being half of a head so we reap half the reward. 
+Same for (0,B) case, B/2. And we can add them when thinking about (A, B) case. Isn't linearity great?
 Back to (A,B). It's like (A,0) and (B,0) are basis vectors and adding them gives us (A,B) by linearity.
 Let's see this in action. Again, say 1000 tosses, 500heads 500tails produce reward of $500*A + 500*B$ and scale down to 1 toss by linearity, expected profit is A/2 + B/2
 Which is the average of (A,B)
 We can do this for (A,A,B), 1000 tosses now $~667$ heads and $~333$ tails, so the expected profit is roughly 667*A + 333*B
-Scaled down to 1 toss, again by linearity, expected profit is $2/3 * A + 1/3 * B$
-Which is why expectated outcome of our random variable, in our case the reward we get doing a single coin flip, is computed by A*P(A) + B*P(B), and is a weighted average.
+Scaled down to 1 toss, again by linearity, expected profit is $2/3 * A + 1/3 * B$.
+Again, this is exactly the average of (A,A,B) as each A contributes 1/N or 1/3 as N=3 so we have 2 A's, giving us 2/3*A and we have 1 B, giving us B/3.
+Which is why expectated outcome of our random variable, in our case the reward we get doing a single coin flip, is computed by A*P(A) + B*P(B), and is equivalent to a weighted average.
 
 And for the general case of definition expectation of a random variable over a probability space,
 it generalizes to the sum of all the outcomes weighted by their associated probabilities, so again, a weighted average.
-Just to hammer this expectation tied to weighted average point a final time, the average itself of some N numbers is, again, the expectation using the uniform weight 1/N.
+Just to hammer this expectation tied to weighted average point a final time, the average itself of some N numbers is, again, the expectation using the uniform weight 1/N 
+and each number's multiplicity is analogous to it's probability.
 
 == Center of Mass, Discrete and 1D
 So, I lied, but not really. While I'm going to hammer expectation and averages again, but in a way I moreorless already did this earlier when I considered averages of outcomes from the perspective of the center, splitting distances (weighted by probability of a given outcome) to enfore the sums of the distance deviations from the right and left added up. Essentially, that's the end of it and we're already conceptually done.
