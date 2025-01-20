@@ -119,9 +119,10 @@ So 2/3 and 1/3 are probabilities and weights and they are connected to the multi
 Again, note that this is equivalent to performing a weighted coin flip with P(Heads) = 2/3 and P(Tails) = 1/3.
 
 Aside: Going the other direction, I have the probability space (A:2/3, B:1/3) and from that I can connect it to (A,A,B).
-But the general case might not be so clean, there might not be a "GCD" of 1/3 in the probability distribution or a "GCD" or, non-normalized, a "GCD" of 1 where A's count is 1 and B's count is 2 and 1 divides 2 as 2 is double 1 (GCD in quotes because actual GCDs are integers, and that too, integers than 1)
+But the general case might not be so clean, there might not be a "GCD" of 1/3 in the probability distribution or a "GCD" or, non-normalized, a "GCD" of 1 where A's count is 1 and B's count is 2 and 1 divides 2 as 2 is double 1 (GCD in quotes because actual GCDs are integers, and that too, integers greater than 1)
 Like the key distinction I'm positing is that B's weight may not be exactly an integer multiple of A's weight.
-It's still a discrete probability space, but the weights (A: P(A), B:P(B)) may be such that P(A) does not cleanly divide P(B)
+It's still a discrete probability space, but the weights (A: P(A), B:P(B)) may be such that P(A) does not cleanly divide P(B) or vice versa.
+(Sidenote/"hack", I could just take a very large number like 1,000,000 and multiply that by P(A) and P(B) and set these as the multiplicities of As and Bs).
 I maintain that it's not the weights that matter as it is their relative composition which in this case is countB:countA = 2:1
 so I can still use takeaways for the simple, discrete, cases and extend it to general discrete probability spaces.
 I'll proceed to explain why I'm comfortable doing so generally or give myself some intuition at least.
