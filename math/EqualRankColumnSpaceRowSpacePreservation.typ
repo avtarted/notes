@@ -59,14 +59,32 @@ And for aesthetic reasons, let the first 3 rows of A be linearly independent and
 
 == The other direction
 Transpose argument really. $A$ and $A^T$. I believe my work is essentially done in the previous section, but I'll opine further to further flesh it out.
-So we've shown adding a vector a_4 that is a linear combination of a_1, a_2, a_3 forces no change in the row space, the non-top 3 rows stay redundant.
-The question now is if this if then relationship is if and only if, that is, a_4 being linearly dependent is the only cause for no change in row space.
-If so, they I'm done. (Why? If a_4 is independent/not a combination of a_1, a_2, a_3 then the rowspace gains a dimension to rank 4 because if it stayed rank 3 
-there's contradiction on rank unchanged mandating a_4 being a combination of a_1, a_2, a_3 which is a contradiction.)
+
+So we've shown adding a vector a_4 that is a linear combination of a_1, a_2, a_3 mandates that there is no change in the row space's rank, 
+the non-top 3 rows stay redundant linear combinations of the top 3 rows and thus both column space and row space remain rank 3 except the row space is a subspace of RR^4 and not RR^3.
+The question now is if this if-then relationship is an if-and-only-if one, 
+that is, a_4 being a linear combination of a_1, a_2, a_3 is the only cause for no change in row space.
+That is, if by adding some a_4 to A, the rank of the row space remains unchanged, then a_4 must be a linear combination of a_1, a_2, a_3. 
+If so, they I'm done. 
+(
+Why? If a_4 is not a combination of a_1, a_2, a_3 then it can't be that the row space's rank is unchanged and remains rank 3 
+because there's contradiction on rank of rowspace remaining unchanged mandating a_4 being a combination of a_1, a_2, a_3. 
+So by contradiction, I know adding such an a_4 that increases the rank of the column space by 1 to rank 4 (because a_4 is not in span(a_1, a_2, a_3)) must change the row space's rank.
+So the question now is how will the row space change? I want to show that it's rank must increase from 3 to 4 to maintain rank(colspace) = rank(rowspace) equivalency.
+Again, adding a_4 extends all entries of the rows by 1, 
+and this certainly won't cause any of the top 3 rows being linearly independent. 
+(Why? Simple proof by contradiction on the initial 3 rows not being independent to begin with as 
+if, by adding 1 element to the end of those 3 rows, one of the rows can be written as a linear combination of the other 2 rows, 
+then we have reached a contradiction as that same linear combination relationship would apply to the initial 3 rows and they are not linearly independent to begin with)
+So adding a_4 certainly won't decrease the rank of the rowspace, the top 3 rows will continue to form a linearly independent set. 
+And we know from a prior (only-if) contradiction that adding this a_4 that's not a linear combination of a_1, a_2, a_3 must change the rank of the rowspace.
+So the only forced option is that the rank of the rowspace has to increase from rank 3 to some higher rank.
+But the row vectors now extended by 1 entry to the right are in RR^4 so 4 is the highest rank the row space can span, all of RR^4, so from rank 3, we go to rank 4 rowspace. And done.
+)
 
 Again let me quickly restate the remaining objective. 
 Appending the a_4 to A extends all the existing rows by 1. 
-The top 3 rows will obviously remain independent (Why? Simple proof by contradiction on the initial 3 rows not being independent to begin with.)
+The top 3 rows will obviously remain independent as I've shown by contradiction.
 But my aim now is to show that if the remaining lower rows remain the same linear combinations of the top 3, then this mandates a_4 to in turn, be a combination of a_1, a_2, a_3.
 
 Recall my naming of the top 3 entries of $a_4$: $a_(4,1)$, $a_(4,2)$ $a_(4,3)$.
