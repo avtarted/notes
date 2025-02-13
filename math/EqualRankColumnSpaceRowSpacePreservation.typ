@@ -53,7 +53,21 @@ where (a_1, a_2, a_3) are linearly independent vectors in R^3.
 == Generalizing: Linear Combinations Preserving Linear Combinations
 A = [a_1, a_2, a_3]. m by n matrix n = 3 and m >= 3. Let's assume this A abides by rank colspace = rank rowspace = 3
 And for aesthetic reasons, let the first 3 rows of A be linearly independent and the rest of the rows below be linear combinations of the top 3 rows.
-
+So we have:
+$ A = mat(accent(a_1, arrow),accent(a_2, arrow),accent(a_3, arrow)) = mat(a_(1,1), a_(2,1), a_(3,1);a_(1,2), a_(2,2), a_(3,2);a_(1,3), a_(2,3), a_(3,3); dots.v, dots.v, dots.v; a_(1,i), a_(2,i), a_(3,i); dots.v, dots.v, dots.v;  augment: #(hline: 3)) $
+And ${accent(a_1, arrow),accent(a_2, arrow),accent(a_3, arrow)}$ is linearly independent with rank 3 and it's span is the column space of $A$, a subspace of RR^M with rank 3.
+And the top 3 rows: $vec(a_(1,1), a_(2,1), a_(3,1))^T, vec(a_(1,2), a_(2,2), a_(3,2))^T, vec(a_(1,3), a_(2,3), a_(3,3))^T$ are likewise linearly independent with rank 3 and form a basis for the row space of A, which is RR^3.
+So we have ranks of the column and row spaces both being 3.
+A consequence of the top 3 rows being a basis for the row space is that 
+all rows below the top 3 are redundant in that they can be expressed as a unique linear combination, $L_(r,i)$, of the top 3 rows as proved in the prior groundworks section.
+That is, the $i$th row $vec(a_(1,i), a_(2,i), a_(3,i))^T$ is uniquely expressed as a linear combination, $L_(r,i)$, of the top 3 rows $forall m>=i>3$.
+Let's spell out $L_(r,i) = accent(x, arrow)^T = mat(x_1, x_2, x_3)$, 
+which is purely notational and allows me to express the $i$th row as a linear combination of the top 3 rows formally as this left side matrix multiplication:
+$ mat(x_1, x_2, x_3)*mat(a_(1,1), a_(2,1), a_(3,1);a_(1,2), a_(2,2), a_(3,2);a_(1,3), a_(2,3), a_(3,3)) = mat(a_(1,i), a_(2,i), a_(3,i)) $
+Or to be super clear and to literally spell this out, this means there are 3 equalties: 
+$ a_(1,i) = x_1*a_(1,1) + x_2*a_(1,2) + x_3*a_(1,3) $
+$ a_(2,i) = x_1*a_(2,1) + x_2*a_(2,2) + x_3*a_(2,3) $
+$ a_(3,i) = x_1*a_(3,1) + x_2*a_(3,2) + x_3*a_(3,3) $
 
 
 
