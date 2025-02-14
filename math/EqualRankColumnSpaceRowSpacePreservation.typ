@@ -47,6 +47,7 @@ The key result is that not only does x always exist but that it is unique.
 Let me reiterate, the key result is that, given any b in R^3, we can express it as a unique linear combination of a_1, a_2, a_3
 where (a_1, a_2, a_3) are linearly independent vectors in R^3.
 
+TODO finish this, provide the proof, and maybe add optional section showing how linear dependence mandates a nontrivial nullspace and Ax=b has x=x_1 + n where n in the nullspace infinite such n's
 
 
 
