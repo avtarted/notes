@@ -51,7 +51,8 @@ where (a_1, a_2, a_3) are linearly independent vectors in R^3.
 
 
 == Generalizing: Linear Combinations Preserving Linear Combinations
-A = [a_1, a_2, a_3]. m by n matrix n = 3 and m >= 3. Let's assume this A abides by rank colspace = rank rowspace = 3
+For the rest of this article, I will work with the matrix 
+A = [a_1, a_2, a_3]. m by n matrix n = 3 columns and m >= 3 rows. Let's assume this A abides by rank colspace = rank rowspace = 3
 And for aesthetic reasons, let the first 3 rows of A be linearly independent and the rest of the rows below be linear combinations of the top 3 rows.
 So we have:
 $ A = mat(accent(a_1, arrow),accent(a_2, arrow),accent(a_3, arrow)) = mat(a_(1,1), a_(2,1), a_(3,1);a_(1,2), a_(2,2), a_(3,2);a_(1,3), a_(2,3), a_(3,3); dots.v, dots.v, dots.v; a_(1,i), a_(2,i), a_(3,i); dots.v, dots.v, dots.v;  augment: #(hline: 3)) $
@@ -69,9 +70,78 @@ $ a_(1,i) = x_1*a_(1,1) + x_2*a_(1,2) + x_3*a_(1,3) $
 $ a_(2,i) = x_1*a_(2,1) + x_2*a_(2,2) + x_3*a_(2,3) $
 $ a_(3,i) = x_1*a_(3,1) + x_2*a_(3,2) + x_3*a_(3,3) $
 
+=== Adding Redundant Column Vector
+As I saw in the first, rank 1 section, appending a scalar multiple column to a_1 kept the rank of the matrix $mat(a_1, a_2) = mat(a_1, 3*a_1) = mat(3,9;4,12;5,15)$ both column and row wise at 1.
+Now this subsection explores a more general case of appending a redundant $a_4$ vector to our $A=mat(a_1, a_2, a_3)$, 
+redundant meaning that I can express $a_4$ as some linear combination, $L_c = accent(y, arrow) = vec(y_1, y_2, y_3)$ of a_1, a_2, a_3. 
+That is, $accent(a_4, arrow) = y_1*accent(a_1, arrow) + y_2*accent(a_2, arrow) + y_3*accent(a_3, arrow)$.
+So adding a_4 to A gives:
+$ mat(a_(1,1), a_(2,1), a_(3,1), a_(4,1);a_(1,2), a_(2,2), a_(3,2), a_(4,2);a_(1,3), a_(2,3), a_(3,3), a_(4,3); dots.v, dots.v, dots.v, dots.v; a_(1,i), a_(2,i), a_(3,i), a_(4,i); dots.v, dots.v, dots.v, dots.v;  augment: #(hline: 3, vline: 3)) $
 
+What affect does appending a_4 have on the rank of the column space and row space? Well, since a_4 is redundant and is in span${a_1, a_2, a_3}$ as specified by $L_c = accent(y, arrow)$, 
+the column space remains unchanged so it's rank remains 3. 
+But what about the rank of the row space? I would aim to prove that it, too, stays rank 3. 
+First off, just purely visually, appending an extra column has the affect of extending each rows by 1. Each of the $m$ rows now has $4$ elements insteand of $3$.
+Now the top 3 rows which, as I just saw, form a linear independent set before adding a_4, will continue to form a linear independent set with a rank of 3, except now in $RR^4$.
+(Why? Simple proof by contradiction on the initial 3 rows not being independent to begin with as 
+if, by adding 1 element to the end of those 3 rows, one of the rows can be written as a linear combination of the other 2 rows, that is, these 3 extended rows are linearly dependent, 
+then we have reached a contradiction as that same linear combination relationship would apply to the initial 3 rows showing that they were not linearly independent to begin with.)
+The question, then, is whether the remaining rows below the top 3, now with an extra element tacked on at the end, will continue being redundant.
+That is, can the $i$th row, $forall m>=i>3$, continue to be expressed as the linear combination, $L_(r,i) = accent(x, arrow)^T$, of the top 3 rows?
 
-== The other direction
+We already know these hold from before, reproduced: adding another column does not change this: 
+$ a_(1,i) = x_1*a_(1,1) + x_2*a_(1,2) + x_3*a_(1,3) $
+$ a_(2,i) = x_1*a_(2,1) + x_2*a_(2,2) + x_3*a_(2,3) $
+$ a_(3,i) = x_1*a_(3,1) + x_2*a_(3,2) + x_3*a_(3,3) $
+For the $i$th row to continue to respect $L_(r,i)$ all that is left to prove is 1 additional relation:
+$ a_(4,i) = x_1*a_(4,1) + x_2*a_(4,2) + x_3*a_(4,3) $
+
+This can be readily shown purely algebraically. With the relation $accent(a_4, arrow) = y_1*accent(a_1, arrow) + y_2*accent(a_2, arrow) + y_3*accent(a_3, arrow)$ in mind,
+I will take the three established relations and multiply both sides by y_i (and intentionally "pushing in" the y_i after the x_i) as follows:
+$ y_1*a_(1,i) = x_1*y_1*a_(1,1) + x_2*y_1*a_(1,2) + x_3*y_1*a_(1,3) $
+$ y_2*a_(2,i) = x_1*y_2*a_(2,1) + x_2*y_2*a_(2,2) + x_3*y_2*a_(2,3) $
+$ y_3*a_(3,i) = x_1*y_3*a_(3,1) + x_2*y_3*a_(3,2) + x_3*y_3*a_(3,3) $
+And if we add these 3 equations, the total LHS becomes $y_1*a_(1,i) + y_2*a_(2,i) + y_3*a_(3,i)$ 
+which from a_4 being a linear combo $L_c = y$ of a_1, a_2, a_3, this LHS simplifies to $a_(4,i)$.
+And the total RHS similarly simplifies via factoring out the $x_i$ to $x_1*a_(4,1) + x_2*a_(4,2) + x_3*a_(4,3)$
+
+I just symbolically proved that the a4 column abides by the $L_(r,i)$ row relation across this column. But ok, so that was simply algebra, 
+but I want to present a bit more intuition to hammer this preservation point in. 
+As I feel like something simple, yet perhaps even deep, just happened.
+
+To this end, let me take a step back. If a row r_4 is a linear combination of some other rows x_1*r_1 + x_2*r_2 + x_3*r_3, then if we stack these rows and build a matrix
+then we can view it both row-wise and column-wise. The rows define columns (and vice versa).
+The relation, x, can be viewed across every column. A row is a vector and the usual linear combination, linearity, operations of scaling and adding rows, 
+these operations when applied to row vectors or more generally applying these operations to vectors in general do it itemwise in "lockstep" to all the constituent elements.
+Say we have:
+$ mat(r_1^T; r_2^T; r_3^T; r_4^T; augment: #(hline: 3)) = mat(r_(1,1),r_(1,2),r_(1,3);r_(2,1),r_(2,2),r_(2,3);r_(3,1),r_(3,2),r_(3,3);r_(4,1),r_(4,2),r_(4,3); augment: #(hline: 3)) $
+Note that the indexing has changed to be row-first, then column, which at least, is how I'm used to denoting 2D arrays in programming.
+This matrix gives me 3 columns:
+$ vec(r_(1,1), r_(2,1), r_(3,1), r_(4,1)), vec(r_(1,2), r_(2,2), r_(3,2), r_(4,2)), vec(r_(1,3), r_(2,3), r_(3,3), r_(4,3)) $
+The $i$th column can be written as $vec(r_(1,i), r_(2,i), r_(3,i), r_(4,i))$
+Let me say that the fourth row, r_4, has a "x-flavor" of $accent(x, arrow)$ and this "x-flavor" manifests itself across all the columns.
+The $i$th column's bottom entry can be expressed as this flavor $r_(4,i) = x_1*r_(1,i) + x_2*r_(2,i) + x_3*r_(3,i)$.
+So we can explicitly write out our "x-flavored" $i$th column as $vec(r_(1,i), r_(2,i), r_(3,i), x_1*r_(1,i) + x_2*r_(2,i) + x_3*r_(3,i))$
+
+Now for the fun part: linearity. There are 2 principle linear operators over a vectorspace: scaling and addition.
+I believe, and I may be wrong, that this "x-flavor" defines an "x-flavored" vector space closed under these 2 linear operations.
+And thus if I append a new column to the matrix that is a linear combination of the column vectors, the resulting column will also be "x-flavored".
+And by extension, the redundant 4rth r_4 row will continue to be redundant and continue to be the same "x-flavored" linear combination of r_1, r_2, r_3.
+
+This sounds fancy, but the idea is really simple. The first operation is scaling. If we scale our $i$th column vector by $k$, we get:
+$ k*vec(r_(1,i), r_(2,i), r_(3,i), x_1*r_(1,i) + x_2*r_(2,i) + x_3*r_(3,i)) = vec(k*r_(1,i), k*r_(2,i), k*r_(3,i), x_1*k*r_(1,i) + x_2*k*r_(2,i) + x_3*k*r_(3,i)) $
+And this resultant vector is also "x-flavored" or closure under scaling. That is, the bottom entry is a linear combination (dot product) of the upper entries, weighted by $accent(x, arrow)$.
+
+The second operation is closure under addition. That is, the sum of two "x-flavored" vectors is also "x-flavored". I'll borrow a $j$th column vector and so I have:
+$ vec(r_(1,i), r_(2,i), r_(3,i), x_1*r_(1,i) + x_2*r_(2,i) + x_3*r_(3,i)) + vec(r_(1,j), r_(2,j), r_(3,j), x_1*r_(1,j) + x_2*r_(2,j) + x_3*r_(3,j)) =
+vec(r_(1,i) + r_(1,j), r_(2,i) + r_(2,j), r_(3,i) + r_(3,j), x_1*(r_(1,i)+r_(1,j)) + x_2*(r_(2,i)+r_(2,j)) + x_3*(r_(3,i)+r_(3,j))) $
+And to belabor the point, the summed vector is again "x-flavored" in that the bottom entry is the sum of its upper entries weighted by $accent(x, arrow)$.
+
+So the preservation point is that the column vector linear operation $L_c = accent(y, arrow)$ used to generate a redundant a_4 weighting the columns a_1, a_2, a_3 by $accent(y, arrow)$ 
+preserves the row vector linear operation $L_(r,i) = x$ for the $i$th redundant row so it remains redundant in the exact same manner it was redundant weighting the top three rows 
+except now the last column ith entry weights the top three entries of the last column by $accent(x, arrow)$ to preserve the action of $L_(r,i)$. Done!
+
+=== The other direction
 Transpose argument really. $A$ and $A^T$. I believe my work is essentially done in the previous section, but I'll opine further to further flesh it out.
 
 So we've shown adding a vector a_4 that is a linear combination of a_1, a_2, a_3 mandates that there is no change in the row space's rank, 
@@ -109,7 +179,7 @@ $ mat(a_(1,1), a_(2,1), a_(3,1);a_(1,2), a_(2,2), a_(3,2);a_(1,3), a_(2,3), a_(3
 where $accent(x, arrow)$ specifies $L_c$.
 
 
-Now back to the full version of A, appended with a_4:
+Now back to the full version of A, appended with a_4, reproduced from the prior subsection:
 $ mat(a_(1,1), a_(2,1), a_(3,1), a_(4,1);a_(1,2), a_(2,2), a_(3,2), a_(4,2);a_(1,3), a_(2,3), a_(3,3), a_(4,3); dots.v, dots.v, dots.v, dots.v; a_(1,i), a_(2,i), a_(3,i), a_(4,i); dots.v, dots.v, dots.v, dots.v;  augment: #(hline: 3, vline: 3)) $
 So the $i$th row is redundant, that is, it is some linear combination, $L_(r, i)$ of the first 3 rows. 
 And this redundancy applies for all rows below the top 3 rows, but let me just consider this $i$th row.
