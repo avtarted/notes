@@ -109,6 +109,23 @@ It appears in bucket{1}, bucket{1-2}, bucket{1-4}, bucket{1-8}. So again, there'
 And when I do Range(X) pursuant to the BIT scheme, I must either get the 1 from bucket{1-8} and potentially continue down that bucket path for all X >= 8 
 or get the 1 from the remaining buckets. This means X < 8 so it's basically binary search, next decision node is if X >= 4 (but < 8) use bucket{1-4}, else X < 4 and so forth.
 
+Actually, just as I write this, I realize this suggests why BIT scheme may be natural. 
+TODO review this as it's stream of conciousness, evaluate content/correctness and clarity/notation/try being consistent.
+Say we follow some Prefix of buckets in a chain that covers Range(A) and then we reach the bucket {A+1 - B} that is non-singleton.
+So it's parent bucket, P, ends in A and is the last node on the prefix bucket chain that, together, covers Range(A).
+From earlier discussion on branching, I believe this forces branching.
+Taking this bucket will jump to B, but intermediate ranges [A+1 - J] for A+1 <= J < B must be accounted for. Say there are K such J's (K = B - 1 - A)
+Then say we have some strategy, S, to build a subtree that is also a child of the parent bucket P (so this entire subtree is a sibling to the subtree rooted at bucket {A+1 - B})
+and its job is to cover all these K range queries: Range{A+1}, Range{A+2},...,Range{B-1}.
+Now consider the descendants of the bucket {A+1 - B}, or the subtree rooted at that bucket. 
+This bucket itself answers Range(B) when extending it's prefix chain and its descendants would answer range queries Range(J) for J>B.
+A thought experiment is what if this subtree rooted at the bucket {A+1 - B} would answer K more range queries: Range{B+1}, Range{B+2}, ... , Range{B+K}.
+If I assume the S is an "optimal" strategy for creating a subtree to answer K range queries, 
+it feels natural to me to reuse this same S to create the subtree rooted at {A+1 - B}.
+So for the BIT scheme, we have a bucket {1-8} so Range(J) for 1<=J<=7 have some strategy and this same strategy applies for Range(K) for 9<=K<=15.
+Basically, recursive nature of this arrangement.
+
+
 
 
 
