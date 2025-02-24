@@ -59,33 +59,57 @@ I will now contemplate potential implications of a Log(N) scheme and how it woul
 namely, the key idea of branching as opposed to the linear, non-branching approach that is the vanilla list.
 Upon careful examination of this scheme, I believe it is natural that "branching" happen (TODO think about this, REQUEST FOR FEEDBACK)
 First point is that under the Log(N) approach, not all of the buckets can be singleton buckets like the vanilla list case.
-Because the O(Log(N)) buckets need to cover all X numbers, 1-X. Let's say the second bucket {A+1 - B} is non-singleton and contains some J != B, that is, A+1 <= J < B.
+Because the Log(N) buckets need to cover all X numbers, 1-X. Let's say the second bucket {A+1 - B} is non-singleton and contains some J != B, that is, A+1 <= J < B.
 Important: Consider Range(J). I believe it is "natural" to reuse the first bucket {1-A} to get the prefix of Range(A) and then take some other path of buckets to get to Range(J).
 Note that we can't use the seond bucket of {A+1 - B} becuase that would overshoot J. 
 So the idea is that if a child of a bucket B is non-empty, it cannot be an only child and bucket B branches to more than one child 
-where, again, all the children get to reuse the contents of bucket B which in turn reusues of its parents and so forth creating a happy prefix chain (of length O(Log(N))).
+where, again, all the children get to reuse the contents of bucket B which in turn reusues of its parents and so forth creating a happy prefix chain (of hopefully length <=Log(N)).
+
+Actually, just as I write this, I realize this suggests why a binary recursive scheme may be natural. 
+This may be getting a bit ahead of myself, and next paragraph I will give a tiny preview of the BIT scheme, but these prefix and branching notions gave me an idea.
+TODO review this as it's stream of conciousness, evaluate content/correctness and clarity/notation/try being consistent.
+Say we follow some Prefix of buckets in a chain that covers Range(A) and then we reach the bucket {A+1 - B} that is non-singleton.
+So it's parent bucket, P, ends in A and is the last node on the prefix bucket chain that, together, covers Range(A).
+From last paragraph discussion on branching to cover all elements, I believe this forces branching.
+Taking this bucket will jump to B, but intermediate ranges [A+1 - J] for A+1 <= J < B must be accounted for. Say there are K such J's (K = B - 1 - A)
+Then say we have some strategy, S, to build a subtree that is also a child of the parent bucket P (so this entire subtree is a sibling to the subtree rooted at bucket {A+1 - B})
+And its job is to cover all these K range queries: Range{A+1}, Range{A+2},...,Range{B-1}.
+Now consider the descendants of the bucket {A+1 - B}, or the subtree rooted at that bucket. 
+This bucket itself answers Range(B) when extending its prefix chain and its descendants would answer range queries Range(J) for J>B for some, but not necessarily all, J.
+A thought experiment is what if this subtree rooted at the bucket {A+1 - B} would answer K more range queries: Range{B+1}, Range{B+2}, ... , Range{B+K}.
+If I assume the S is an "optimal" strategy for creating a subtree to answer K range queries, 
+it feels natural to me to reuse this same S to create the subtree rooted at {A+1 - B}. Essentially, this suggests that a recursive approach at least makes sense to me.
+And a binary one at that because the parent bucket, P, has 2 children: 
+a left subtree (say with a dummy root) that handles K Range queries
+and a right subtree that is rooted at bucket {A+1 - B} which handles K+1 Range queries (K for the descendants and +1 for Range(B) that bucket{A+1 - B} the root handles).
+
+So for the BIT scheme, we have a bucket {1-8} so Range(J) for 1 <= J <= 7 have some strategy and this same strategy applies for Range(K) for 9<=K<=15.
+Basically, recursive nature of this arrangement. 
+I'm definitely getting ahead of myself, but I can almost declare completion here itself.
+Range(X) is Log(N) because 3 cases: simplest is X = 8 so Range(8) = bucket{1-8} and done, 1 <= X < 8 case recurse the left subtree so instead of universe [1,15] 
+the search is now in universe [1,7] and we have eliminated ~half the buckets so given there are N buckets total, this will be O(Log(N)) if the recursion keeps eliminating ~half the buckets.
+Which is does because the last case is is 8 < X <= 15 so universe has halved to [9, 15] and Range(X) is computed in the same manner as would Range(X-8) except there is an offset of bucket{1-8}. 
+So it's recursion on the right subtree for Range(X) is mechanistically the same as recursion for Range(X-8) on the left subtree except I have to add bucket{1-8} the the answer.
 
 I'm done with 1) but I just want to throw in a preview of the BIT scheme that respects a potential Log(N) scheme that uses Log(N) buckets to partition X.
 We want to use Log(N) buckets. Presumably larger Xs will require more buckets.
 Largest number is 15, so hypothetically being "inspired" by binary representation of 15 as 0b1111 and as a preview of the BIT scheme, 
-I'll use the buckets {1-8} | {9-12} | {13-14} | {15}.
+I'll use the buckets {1-8} | {9-12} | {13-14} | {15} to compute Range(15) which is exactly what BIT does.
 Where each 1 in the binary representation has a corresponding bucket with size commensurate with the place of that 1.
-So take the number 11 or 0b1011. It will use buckets {1-8} + {9-10} + {11}
+So take the number 11 or 0b1011. Range(11) will use buckets {1-8} + {9-10} + {11}.
 Since these are just preliminary thoughts, the take away is that whatever scheme I use, 
 I need at most Log(N) buckets which this binary scheme complies with. 
-Why? Well X has log(X) bits and at most all of them will be "1"s 
+Why? Well X<=N has log(X) bits and at most all of them will be "1"s 
 and in this scheme, the number of buckets Range(X) uses are the number of 1 bits in the binary represenation of X.
-And note that both Range(15) and Range(11) use the same {1-8} bucket, so this conveniently agrees with aforementioned concepts of reusing prefixes and branching.
+And note that both Range(15) and Range(11) use the same {1-8} bucket and extend it (bucket {1-8} is a parent to bucket {9-12} and {9-10} in the BIT scheme), so this conveniently agrees with aforementioned concepts of reusing prefixes and branching.
 
-Just to be super-redundant (TODO delete this paragraph?), compare this approach to get Range(X), that is summing Log(N) buckets, with the vanilla list approach of a simple list.
-They both fundamentally have the same "prefix" structure but while the vanilla list approach is linear this approach may use branching.
-In the vanilla list approach, to compute Range(11), I do 11 + Range(10) which in turn becomes 11 + 10 + Range(9) to 11 + 10 + 9 + Range(8) 
-and so forth summing the first 11 singleton buckets. In this computation, I do 1 + 2 + ... + 8 to get a prefix sum that is Range(8) 
-and then Range(9) builds on that by adding 9 and Range(10) in turn builds on Range(9) by adding 10 and finally Range(11) builds on Range(10) by adding 11.
-Compare this to an approach that uses Log(N) buckets.
-First I use bucket {1-8} to get a prefix sum Range(8) and then the next bucket {9-10} builds on that prefix to get Range(10)
-In this approach, buckets cannot all be singleton buckets so that the Log(N) buckets are able to cover all N numbers, 1-N.
-And these buckets do build on each other. Bucket {9-10}'s "parent" is bucket {1-8}. 
+So for the BIT scheme, I want to tye this back to recursive intuition, using an "optimal" strategy, S, I presented 2 paragraphs ago to show Range runs in Log(N).
+I have a bucket {1-8} so Range(J) for 1 <= J <= 7 use strategy S and this same S applies for Range(K) for 9<=K<=15.
+Range(X) is Log(N) because 3 cases: simplest is X = 8 so Range(8) = bucket{1-8} and done, 1 <= X < 8 case recurse the left subtree so instead of universe [1,15] 
+the search is now in universe [1,7] and we have eliminated ~half (see next section where I formally develop BIT scheme, again this is a preview) the buckets 
+so given there are N buckets total, this will be O(Log(N)) if the recursion keeps eliminating ~half the buckets.
+Which is does because the last case is is 8 < X <= 15 so universe has halved to [9, 15] and Range(X) is computed in the same manner as would Range(X-8) except there is an offset of bucket{1-8}. 
+So it's recursion on the right subtree for Range(X) is mechanistically the same as recursion for Range(X-8) on the left subtree except I have to add bucket{1-8} to the answer.
 
 == Update LogN
 Whew, that finished O(Log(N)) Range. Now consider 2): which buckets we place the index/value I in for another O(Log(N)) operation, Update.
@@ -105,34 +129,12 @@ Just like past Range section where I gave a preview of the Range computation for
 I'll do the same for the Update operation just like how the BIT scheme does it.
 But this time, the number that appears in the maximum amount of buckets is the extreme, smallest, number that is 1. 
 Which is intuitive because smaller numbers appear in Range sums of all larger numbers so the smallest number will be used the most for all other numbers.
-It appears in bucket{1}, bucket{1-2}, bucket{1-4}, bucket{1-8}. So again, there's this power of 2 deal going on where 1 appears in 4 buckets staying within LogN confines. 
+The number 1 appears in bucket{1}, bucket{1-2}, bucket{1-4}, bucket{1-8}. So again, there's this power of 2 deal going on where 1 appears in 4 buckets staying within LogN confines. 
 And when I do Range(X) pursuant to the BIT scheme, I must either get the 1 from bucket{1-8} and potentially continue down that bucket path for all X >= 8 
 or get the 1 from the remaining buckets. This means X < 8 so it's basically binary search, next decision node is if X >= 4 (but < 8) use bucket{1-4}, else X < 4 and so forth.
 
-Actually, just as I write this, I realize this suggests why BIT scheme may be natural. 
-TODO review this as it's stream of conciousness, evaluate content/correctness and clarity/notation/try being consistent.
-Say we follow some Prefix of buckets in a chain that covers Range(A) and then we reach the bucket {A+1 - B} that is non-singleton.
-So it's parent bucket, P, ends in A and is the last node on the prefix bucket chain that, together, covers Range(A).
-From earlier discussion on branching, I believe this forces branching.
-Taking this bucket will jump to B, but intermediate ranges [A+1 - J] for A+1 <= J < B must be accounted for. Say there are K such J's (K = B - 1 - A)
-Then say we have some strategy, S, to build a subtree that is also a child of the parent bucket P (so this entire subtree is a sibling to the subtree rooted at bucket {A+1 - B})
-and its job is to cover all these K range queries: Range{A+1}, Range{A+2},...,Range{B-1}.
-Now consider the descendants of the bucket {A+1 - B}, or the subtree rooted at that bucket. 
-This bucket itself answers Range(B) when extending it's prefix chain and its descendants would answer range queries Range(J) for J>B.
-A thought experiment is what if this subtree rooted at the bucket {A+1 - B} would answer K more range queries: Range{B+1}, Range{B+2}, ... , Range{B+K}.
-If I assume the S is an "optimal" strategy for creating a subtree to answer K range queries, 
-it feels natural to me to reuse this same S to create the subtree rooted at {A+1 - B}.
-So for the BIT scheme, we have a bucket {1-8} so Range(J) for 1<=J<=7 have some strategy and this same strategy applies for Range(K) for 9<=K<=15.
-Basically, recursive nature of this arrangement.
-
-
-
-
-
-
-
-
 = A Binary Tree Scheme
+This is the section that essentially should spell everything out exactly, at least for the 4 bit, N=2^4=16 case and hopefully for all powers of 2 N.
 The actual BIT, I maintain, can be viewed as a "compressed" version of this tree where we only focus on non-empty buckets.
 Consider this guiding picture:
 start TODO
