@@ -131,17 +131,30 @@ And a binary one at that because the parent bucket, P, has 2 children:
 a left subtree (say with a dummy root) that handles K Range queries
 and a right subtree that is rooted at bucket {A+1 - B} which handles K+1 Range queries (K for the descendants and +1 for Range(B) that bucket{A+1 - B} the root handles).
 
-So for the BIT scheme, we have a bucket {1-8} so Range(J) for 1 <= J <= 7 have some strategy and this same strategy applies for Range(K) for 9<=K<=15.
+So for the BIT scheme for N=15, we have a bucket {1-8} so Range(J) for 1 <= J <= 7 have some strategy and this same strategy applies for Range(K) for 9<=K<=15.
 Basically, recursive nature of this arrangement. 
 I'm definitely getting ahead of myself, but I can almost declare completion here itself.
 Range(X) is Log(N) because 3 cases: simplest is X = 8 so Range(8) = bucket{1-8} and done, 1 <= X < 8 case recurse the left subtree so instead of universe [1,15] 
 the search is now in universe [1,7] and we have eliminated ~half the buckets so given there are N buckets total, this will be O(Log(N)) if the recursion keeps eliminating ~half the buckets.
-Which is does because the last case is is 8 < X <= 15 so universe has halved to [9, 15] and Range(X) is computed in the same manner as would Range(X-8) except there is an offset of bucket{1-8}. 
-So it's recursion on the right subtree for Range(X) is mechanistically the same as recursion for Range(X-8) on the left subtree except I have to add bucket{1-8} the the answer.
+Which is does because the last case is is 8 < X <= 15 so universe has halved to [9, 15] 
+(after incorporating bucket{1-8} into the sum what is left is [9,15]) 
+and Range(X) is computed in the same manner as would Range(X-8) except there is an offset of bucket{1-8} and recurse on the right subtree rooted at the bucket {1-8}.
+So the recursion on the right subtree for Range(X) is mechanistically the same as recursion for Range(X-8) on the left subtree 
+except I have do O(1) extra work that is adding bucket{1-8} to the answer.
+Thus Range(X) in this potential binary bucket tree approach will be O(Log(N)). 
+
+Let me restate to explain the binary search, halving, logarithmic nature. 
+Range(X) is computed by traversing a chain of buckets and while in the middle of the chain,
+there is some prefix already computed upto Range(P) and what's left is Range(P+1, X) or the remaining range. 
+The elements the Range sums for Range(S, E) is E - S + 1 and let me call this number the range "width".
+And until Range(X) is completely formed, there is at least 1 more bucket to take. 
+and taking a bucket means adding its value to the sum and recursing right as this bucket is at the root of the right subtree.
+Buckets are designed such that they cover ~half(1 more than half) the indices and their descendant buckets cover the remaining half.
+Then each iteration after adding a bucket to the answer, the "width" contracts by half.
 
 I'm done with 1) but I just want to throw in a preview of the BIT scheme that respects a potential Log(N) scheme that uses Log(N) buckets to partition X.
 We want to use Log(N) buckets. Presumably larger Xs will require more buckets.
-Largest number is 15, so hypothetically being "inspired" by binary representation of 15 as 0b1111 and as a preview of the BIT scheme, 
+Largest number is 15, so hypothetically being "inspired" by binary representation of 15 as 0b1111 and to demo the BIT scheme, 
 I'll use the buckets {1-8} | {9-12} | {13-14} | {15} to compute Range(15) which is exactly what BIT does.
 Where each 1 in the binary representation has a corresponding bucket with size commensurate with the place of that 1.
 So take the number 11 or 0b1011. Range(11) will use buckets {1-8} + {9-10} + {11}.
@@ -150,14 +163,7 @@ I need at most Log(N) buckets which this binary scheme complies with.
 Why? Well X<=N has log(X) bits and at most all of them will be "1"s 
 and in this scheme, the number of buckets Range(X) uses are the number of 1 bits in the binary represenation of X.
 And note that both Range(15) and Range(11) use the same {1-8} bucket and extend it (bucket {1-8} is a parent to bucket {9-12} and {9-10} in the BIT scheme), so this conveniently agrees with aforementioned concepts of reusing prefixes and branching.
-
-So for the BIT scheme, I want to tye this back to recursive intuition, using an "optimal" strategy, S, I presented 2 paragraphs ago to show Range runs in Log(N).
-I have a bucket {1-8} so Range(J) for 1 <= J <= 7 use strategy S and this same S applies for Range(K) for 9<=K<=15.
-Range(X) is Log(N) because 3 cases: simplest is X = 8 so Range(8) = bucket{1-8} and done, 1 <= X < 8 case recurse the left subtree so instead of universe [1,15] 
-the search is now in universe [1,7] and we have eliminated ~half (see next section where I formally develop BIT scheme, again this is a preview) the buckets 
-so given there are N buckets total, this will be O(Log(N)) if the recursion keeps eliminating ~half the buckets.
-Which is does because the last case is is 8 < X <= 15 so universe has halved to [9, 15] and Range(X) is computed in the same manner as would Range(X-8) except there is an offset of bucket{1-8}. 
-So it's recursion on the right subtree for Range(X) is mechanistically the same as recursion for Range(X-8) on the left subtree except I have to add bucket{1-8} to the answer.
+And also note that going down the chain of buckets, the size of the buckets at least halves, as does the remining range width, again consistent with a proposed binary, Log(N) scheme.
 
 == Update LogN
 Whew, that finished O(Log(N)) Range. Now consider 2): which buckets we place the index/value I in for another O(Log(N)) operation, Update.
