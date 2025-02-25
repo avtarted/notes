@@ -1,35 +1,83 @@
 
 = Introduction:
-This is a note to myself. 
+This is an article primarily to myself, to clarify my understanding of the Binary Indexed Tree (BIT).
+Maybe some competitve programmers that want insight into how BITs actually work may also benefit from it.
 But I would really appreciate feedback, because this is something that really makes me uncomfortable.
-Like this presents the Binary Index Tree scheme that I can prove runtimes for but feel shaky as to well how to arrive at it.
-It's a topic I've seen on LeetCode and cowered in fear.
+This article presents the BIT scheme that I do prove runtimes for, 
+but the main goal is to provide intuition behind and motivation for the BIT scheme.
+
+The BIT is something I have felt shaky about and cowered in fear when seeing it on LeetCode. 
+So in this article, I'll talk myself into reinventing the BIT scheme to placate future me.
 
 = Problem Statement:
-2 approaches prefix sum and vanilla list each with tradeoffs.
-Reconcilliation, say we have equal, 50-50 split of Range and Update operations.
+I have a list of size N.
+I want to support 2 operations on the list: Range(X) and Update(X, V).
+Range(X) returns the sum of the first X values in the list: List[1] + List[2] + ... + List[X]. 
+And Update(X, V) updates the Xth entry of the list to the value V.
+Sitenote: Range(X) supports a Range(I, J) operation that returns List[I]+List[I+1]+...+List[J] since:
+Range(I, J) = Range(J) - Range(I-1)
 
 == Premise:
-Let's work in a "universe" of a list of size 15, 1-indexed.
+Let's work in a "universe" of a list of size 15, 1-indexed. So N = 15.
 All numbers, then, will be from 1-15 and can be expressed using 4 bits from 0b0001 to 0b1111.
-And Log will mean Log base 2. So given I'm using 4 bits, I have the bound: Log(X) <= 4.
-And let the list I'll work with actually be the list : [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16].
-This way rather than saying the Ith element of the list I can just say the number I, 
-since the Ith element of the special list IS I.
+And Log will mean Log base 2. So given I'm using 4 bits, I have the bound: Log(X) <= Log(N) < Log(N+1) = Log(16) = 4.
+
+== 2 Naive Approaches and Buckets
+
+There are 2 approaches on opposite ends of runtime spectrums: vanilla list and prefix sum.
+
+Vanilla list has O(N) Range and O(1) Update whereas prefix sum has O(1) Range and O(N) Update.
+So depending on the ratio of Range:Update, one scheme may be better than the other if it's skewed enough to amortize the linear operation.
+But, say there are equal, 50-50 split of Range and Update operations. Then both these operations on average will be O(N).
+
+Vanilla list is just the list itself. Update(X, V) is simply setting List[X] = V and done. 
+And Range(X) adds together the first X elements, so that is O(N).
+
+Prefix sum is building an auxilary list, prefixsum, where the Ith element is Range[I].
+Creating this list is done in O(N), single pass from left to right, sweep.
+Set prefixsum[1] = List[1] and then, from I spanning from left to right from 2 to N, prefixsum[I] = List[I] + prefixsum[I-1].
+This is the most elementary example of dynamic programming.
+So clearly prefix sum supports an O(1) Range approach because Range(X) = prefixsum[X]. 
+But the tradeoff is now Update is O(N) because now to implement Update(X, V) first compute dV = V - List[X] where dV is the change in the Xth value. 
+And then increment the O(N) elements prefixsum[X], prefixsum[X+1],...,prefixsum[N] all by dV.
+
+The goal, then, is to break these expensive Range and Update tradeoffs both approaches have 
+by compromising and having a new approach, the BIT scheme, perform both operations in O(Log(N)).
+Here, I would like to introduce the word and the idea of "bucket".
+
+A bucket stores the sum of certain elements in the original, input List. 
+And these "certain elements" are completely specified by their incides.
+So to me, I view buckets as a set of indicies. 
+And for brevity, for the rest of this article I may refer to List[I] simply as I when talking about buckets. 
+For example a bucket containing I and J means that bucket stores the value that is List[I] + List[J].
+Conceptually, simply imagine the list I'm working with as: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16], so List[I] = I. (Yes, updates be damned).
+Continuing the spirit of being imprecise, let me define the size of a bucket as how many indices the bucket contains, 
+or more precisely, how many elements it sums.
+Of course the actual bucket contains a single integer that is the sum.
+
+Ok, so both prefix sum and vanilla list approaches have N buckets. 
+I identify 2 guiding questions: what is the size of the bucket and for a given index, which buckets does it land into?
+
+The prefix sum approach has these buckets be lined up in the auxilary, prefixsum, list.
+The Ith bucket stores the sum of the first I elements so the size, then, of buckets in the prefix sum approach is is O(N).
+And for a given index I, I is a member of O(N) buckets that need to be updated when List[I] is Update'd.
+These buckets are prefixsum[I], prefixsum[I+1],...,prefixsum[N].
+
+As for the vanilla list approach, will the input List itself has all the N buckets as elements of the list. 
+These are singleton buckets where the Ith bucket is simply contains List[I]. 
+So the size of the Ith bucket is O(1) and literally 1 as the only member is I (or List[I]).
+And conversely, a given index I only lands into 1 bucket, the Ith bucket. So also O(1) for the second guiding question.
+
+The two bucket-guiding questions give intuition for the runtimes of Range and Update, respectively.
+The larger the bucket size, the less buckets need to be summed up to compute Range(X).
+Since every bucket a given index X is a member of needs to be updated during Update(X, V), 
+it is not ideal for indices to contribute to too many buckets.
 
 = Preliminary Thoughts
 
-This is just some informal commentary. TODO, really think this out, REQUEST FOR FEEDBACK!
-
-List of size N say I have N buckets.
-I could give these buckets an ordering and index them as buckets 1,2,....N.
-Bucket I could definitely have I as a contributor in that bucket 
-and the number I would not show up in any buckets before the Ith bucket (ordering at play)
-
-
-OK so 2 angles. 
+Two more related guiding questions:
 1) For computing Range(X), which buckets do we use to compute this?
-2) For a given number I, which buckets do we place it in?
+2) For computing Update(X, V), for a given index X, which buckets do we place it in?
 And for both we want to invole O(Log(N)) buckets, so that the Range and Update operations will be O(Log(N)).
 
 == Range LogN
