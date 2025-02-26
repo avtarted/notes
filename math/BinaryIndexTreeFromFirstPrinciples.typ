@@ -211,9 +211,174 @@ or get the 1 from the remaining buckets. This means X < 8 so it's basically bina
 
 = A Binary Tree Scheme
 This is the section that essentially should spell everything out exactly, at least for the 4 bit, N=2^4=16 case and hopefully for all powers of 2 N.
-The actual BIT, I maintain, can be viewed as a "compressed" version of this tree where we only focus on non-empty buckets.
-Consider this guiding picture:
-start TODO
-TODO paste this handrawn picture maybe instead of flat files, organize each note into it's own directory to hold the .tpy, .pdf, and image assets together.
-Maybe also gives room for other file types like animations, TODO/plan files, etc.
-end TODO
+
+Guiding picture paste here TODO
+
+Actual BIT vs this guiding picture 2 main differences.
+BIT is technically a compressed version of my one.
+Basically remove all +0 nodes to be left with non-empty buckets.
+So technically by removing all 0s BIT is technically a forest and not a tree 
+as the root 0 must also be removed in the spirit of fairness right?
+Second difference is that this picture is mores a recipe to compute the sequence of +Ks 
+so to compute the indices a particular bucket contains, 
+you have to do all the prefix addition from root till that bucket. 
+The following picture makes this process of addition to enumerate index contents of every bucket explicit:
+Draw out below this picture a same tree except like instead of +0 or +K it’ll have {} for empty buckets and like the index ranges like {1-8} {9-12} so forth.
+TODO draw and insert this picture
+
+Functionally this complete binary tree (link/reference to main guiding picture) to me 
+is how I reason about BIT scheme and makes reasoning extremely easy. 
+Recursion and symmetry are readily evident. 
+Understand this and you can get a BIT scheme for free again simply a compressed version of this 
+which I’ll briefly discuss in final subsection.
+
+== Range operation
+This tree essentially shows how binary representation works. 
+Note how the leaves are labeled from 0-15. 
+Track the root->leaf path for any leaf and you get the binary representation of that leaf of value X: 
+this is you get a sum of up to Log(N) powers of 2 that together add up to, or cover, all of X. 
+For example take previous example X=11 = 0b1011 = RLRR. 
+1st R is +8 so is bucket covering {1-8}, 
+then L that covers nothing, so a dummy bucket, 
+then 2nd R is +4 but I already am up to prefix sum or range of 8 
+so this ‘+’ in +4 means offset 
+so this 2nd R is second bucket{9-10} with size 2 and finally 3rd R is {11} and done.
+11 = 8+0+2+1 or range {1-11} = {1-8}|{9-10}|{11} so natural decomposition of Range(X) to all the 1s in the binary representation of X. 
+Then all buckets in this binary scheme correspond to R’s, the +K nodes. 
+And the L’s, the +0 nodes, are dummy nodes.
+
+Before going up update I would like to reinforce some of the preliminary thoughts intuition prior section. 
+This tree is like a decision tree with 4 levels each level from MSB to LSB. 
+First level decision is +0 or +8. 
+Second level decision is +0 or +4. 
+Third is +0 or +2. 
+Fourth is +0 or +1. 
+Regardless of the particular subtree you are in, whatever prefix of Rs and Ls you took to get to the root of a particular subtree, 
+all subtrees at that given depth have symmetric mechanisms, symmetric scale of decision to make. 
+Take Range(11). The top decision is +0 or +8 and 11 > 8 so I add bucket{1-8} to the sum and recurse right. 
+Range(1,8) is done and what’s left is Range(9-11). 
+11-8 is 3 so this is mechanistically equalvent to Range(11-8) = Range(3). 
+Basically 11’s path again is RLRR and 3’s path is LLRR. 
+The suffix LRR is the same so every R taken rules out its sibling Ls entire subtree 
+thereby at least cutting the remaining buckets in half. 
+So for 11, the first R taken is +8. 
+This eliminates half the tree as now I am in the +8XXX subtree or the RXXX or the 1XXX subtree with 8 leaves spanning 8-15 
+vs the left subtree of +0XXX or LXXX or 0XXX subtree with 8 leaves spanning 0-7 which was just eliminated. 
+Note how the highest value in the left subtree eliminated is exactly 1 less than 8, the size of the +8 bucket. 
+This is simply how binary works and agrees with my preliminary intuition of having a bucket of size K + 1 and with left subtree size K and descendants size K as well. 
+When I say how binary works 7 = 0b0111 and 8 = 0b1000. Adding 1 to 7 causes domino effect leading to 8. (Add link to my sums of powers of 2). 
+In general when at prefix node and have to make a decision to go left or right, 
+again going left is taking a 0 at that level/height in the binary representation and going right is taking a 1. 
+So if you go left then the highest value you can create is by then going right so in binary we have the prefix P + the offset of 0b0{11…1}, 
+that is an offset of in binary 1 zero followed by K ones. 
+Versus right bucket which itself encodes the binary digit 0b1{00..0} or 1 followed by K zeroes. And 1 and K zeroes is exactly 1 more than 0 and K ones.
+Thus the size of the bucket allows it to ‘dominate’ and rule out the entire sibling left subtree. 
+So again binary representation of number X has some 1 bits corresponding to R buckets selected 
+and everytime I take the R path this eliminates half of the remaining descendants, half the buckets, to use to form X. 
+So Log(N) steps given each step at worst if take R cuts half the available buckets to use to create X. 
+So back to 11 vs 3, 11 eliminates the first left subtree ranging from 0-7 leaves, halves the search space and then recurses on a smaller, at least half as smaller, 
+problem of covering {9-11} given that {1-8} was just covered. 
+And by symmetry with the left subtree, this problem of covering {9-11} is exactly the same is if I wanted to compute Range(3) to begin with. 
+This decision tree process with Range(3) goes like 3 < +8 so L, then 3 < +4 so L again, then 3 > 2 so R and 3 = 2+1 so R 
+and thus Range 3 uses the buckets {1-2} and {3} which mechanistically are equivalent to the buckets {9-10} and {11} used to cover Range(11) 
+once half the search problem was cut by taking the right R bucket covering {1-8}.
+
+== Update operation
+Update well basically the zeroes in binary representation to the left of the LSB 1. 
+In the tree finding X in this tree or rather +X. 
+At each node you can go left +0 or go right till you reach X.
+Going left again is a 0 at the bit corresponding to that level of the binary rep of X. 
+So if you had gone right at that node instead than that right bucket contains X (and thus none of its descendants do). 
+Why must this right bucket contain X? 
+I already stated it in previous section using binary representations but I love reiterating. 
+For starters, you could look at the image and convince yourself of this. 
+For example, +8 -> +4 bucket stores [9-12] and the leaves of the subtree of +8 -> +0 range from 8-11 and 8 is covered by the prefix +8 and 9-11 is covered in the {9-12} bucket as 12 > 11. 
+Note that X > 8 or else the +8 bucket that is [1-8] would have already reached X and stop no need to explore further.
+OK so another way is by considering binary as I’ve already talked about in previous subsection. 
+Taking the left branch means you have 0 at a given index the level corresponds to versus going right meaning you have 1 at that same index. 
+Now 0 followed by any K binary digits, at most K 1’s will still be less than the right bucket which is +1 * 2^K or 1 followed by K 0’s (see note on sum of powers of 2 provide link). 
+So whenever I see 0s on the path to the LSB of X from the root, that is at a branching I go left instead of right, 
+I fill the right 1 child with X. 
+Another way to think about is is classic DFS, where explore node entails 
+1: explore node.left 
+2: explore node.right 
+3: return to caller 
+so after DFS-exploring returns from exploring X (so trailing zeroes have already been popped off the call stack) and as the recursion unwinds, 
+right calls pop off the stack but left calls being reached means explore(node.left) finished and it’s time to explore node.right 
+and node.right covers 1 more than the max of the left subtree (again, see note on sum of powers of 2 provide link) 
+so node.right bucket must have X 
+(again the fact that node.left recursed means X wasn’t reached 
+so X is greater than the parent node’s highest value so X >= node.right’s lowest index but X < node.right’s highest index 
+again as node.right covers 1 more than max of the left subtree that contains X, 
+so X fits inside node.right bucket, 
+and again the upshot is this precludes all descendants from having X. 
+So all the zeros before the LSB 1 each when replaced from 0 -> 1 and then all zeroes point to a bucket that X must be placed in, 
+again log(N) such buckets as Log(N) digits. 
+Each level precludes a particular power of 2 - 1 number of buckets from containing X. 
+Like in the extreme case of 1 being in the most buckets, 
+placing 1 in bucket {1-8} cuts off buckets 9-15 from having 1 so 7 these 7 = 2^3-1 buckets cannot have 1, 
+then placing 1 in bucket {1-4} cuts off buckets 5-7 from having 1 so these 3 = 2^2-1 buckets from having 1, 
+and finally placing 1 in bucket {1-2} cuts off bucket 3 from having 1 so this 1 = 2^1 - 1 bucket is blocked. 
+These 3 blocks correspond to the 3 leading zeroes in the binary representation of 1: 1=0b0001.
+
+But that’s all BEFORE LSB, before reaching X. 
+At some point during this binary representation tree traversal process, I’ll turn right and find a bucket with +K such that X gets reached. 
+This final right turn is the LSB 1 in the binary representation. 
+So this bucket contains X by definition. 
+And then zero or more +0 left turns meaning possible trailing zeroes. 
+These zeroes do not need to be analogously updated to the zeroes in front on the LSB 1 because well, 
+this LSB 1 bucket that contains X contains X for all its descendants as well.
+
+Time to go back to binary approach. X can be represented in binary as 1s and 0s. 
+Now to get ALL numbers strictly > X, here is how: 
+for every 0 in the binary representation of X, set it to 1 and then the remaining bits to the right set them to all combinations which is a nice power of 2. 
+Now for zeroes before the LSB 1, setting such a 0 to 1 and then zeroing out all bits yields the base bucket at that particular level of the tree that contains X 
+and all other combinations are descendants of this base bucket, 
+the upshot being for this level that the place/position of 0 that became a 1 corresponded to, 
+only a single sibling bucket needed to take on X and all it’s descendants then get X for free by the prefix-extending nature of this approach.
+
+Final task is to show with a binary representation of X that when finding Range(K) where K > X 
+show exactly 1 bucket contains X which was something I mentioned but did not justify in my Preliminary Thoughts Update subsection.
+I mean could just say binary representation of K and done as the binary representation of K has specifies disjoint buckets by virtue of prefix extension and they cover all K.
+So somewhere in this bucket chain exactly 1 bucket must contain X. Fair enough. 
+But to elaborate, there may be a possibly empty prefix from the left/MSB where K matches X in binary 
+but since K > X at some index, again possibly the very first one, K will have a 1 and X will have a 0.
+And again 2 familiar classes. 
+First this 0 in X could be before the LSB 1 which means right there the sibling bucket with that 1 as it’s LSB will contain X 
+and as range(K) traverses down the tree all future buckets in the chain will be descendants of this bucket with X and thus will not have X and so exactly 1 and all good. 
+Second class is when the 0 is after the LSB 1 in X and again that case but bucket associated with the LSB of X itself, that bucket with X as its highest index, 
+would have X and then same concept everything else in K is a descendant of this bucket so again, see X exactly once.
+
+== Update operation
+
+Actual binary index tree connection. 
+Already have described a perfectly serviceable scheme that supports Range and Update! 
+N=4 bits there are 31 nodes 16 zeroes and 15 ones. 
+How convenient given list size is 15, spanning indices 1-15. 
+Essentially the BIT is my binary tree approach except with half + 1 dummy zero nodes being discarded 
+as who cares about empty buckets? 
+My approach still uses O(N) space like O(2N+1) = O(N). 
+See 2nd Figure where the {} buckets can be ignored. 
+Given that there are N=15 non-empty buckets 
+and given each bucket itself has a unique path leading to it from the root that, describes a unique binary number between 1 and N, 
+and let me name this the binary representation of the bucket.
+(Why is this binary represendation number unique and between 1 and N? 
+You take unique path to reach a given bucket from the root which corresponds to unique prefix 
+and then only go left all the way to leaf meaning add trailing zeroes thereby forming the binary representation for that bucket). 
+So there are N non empty buckets each with a unique binary representation between 1 and N 
+so it is natural to order the buckets by assigning every bucket an index that is the bucket's binary representation, 
+the index again being specified by the path down the binary tree till taking the final R to hit a given non-empty R bucket.
+This index is the highest index the bucket contains, which is another, equivalent, view of the index of a bucket.
+Ex. the +8 -> +4 bucket has index 12 where 12=8+4 and the path to get that bucket is RR, two rights, which means 2^3 for first R and 2^2 for second R, and 12 = 2^3 + 2^2.
+So now that I have N buckets with N indices compactly representing them
+So it behooves a practical implementor to use a 1 indexed array of size N to compactly order and store the buckets, 
+which is exactly what the BIT schemes mechanism uses: a size N auxiliary array to implicitly encode the BIT.
+
+Final sidenote: again main difference from my approach to BIT is removing empty +0 bucket nodes 
+so to be consistent and to not treat the root +0 specially, 
+in the spirit of equality and fairness, for justice for all +0s, the root monarch +0 must be treated no different, equalized all the same, 
+then technically its not so much a Binary Indexed Tree as it as a Binary Indexed Forest, 
+like a forest of disjoint subtrees of increasing powers of 2 sizes with roots at: {1}, {1-2}, {1-4}, {1-8} and so forth.
+Ok I’ve written enough, thanks for making it so far I know I probably didn’t. I'm so tired and instead of waxing eloquent, I'm waxing delirious.
+
+Final final note/TODO: for fun copy paste picture from Wikipedia Fenwick (give credit to the independent author, maybe even ask permission? worst case I'll recreate it or maybe actually even copy the picture from Dr. Fenciks article on said Fenwick/BIT tree) three but color different subtrees and with same coloring deface my guiding picture as well (see text with green circles to nemesis but can also next like red circles for smaller nested subtrees as well). Apologies for defacing two wonderful pictures but for education and instruction, I must do so.
