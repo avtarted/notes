@@ -85,7 +85,8 @@ Consider 1) the buckets themselves. I want to introduce 2 concepts: prefixes and
 
 
 Say we partition X into buckets {1-A} | {A+1 - B}| {B+1 - X}.
-To compute Range(X) we sum the values of these 3 buckets, where bucket(I - J) holds the sum of [I + (I+1) + (I+2) + ... + J].
+To compute Range(X) we sum the values of these 3 buckets, where bucket(I - J) holds the sum of [I + (I+1) + ... + J] 
+(again this is shorthand for sum of [List[I], List[I+1],...,List[J]].
 For a given X, we want O(Log(N)) buckets
 
 Compare this to the vanilla list approach to compute Range(X): both use prefix sums.
@@ -135,13 +136,16 @@ So for the BIT scheme for N=15, we have a bucket {1-8} so Range(J) for 1 <= J <=
 Basically, recursive nature of this arrangement. 
 I'm definitely getting ahead of myself, but I can almost declare completion here itself.
 Range(X) is Log(N) because 3 cases: simplest is X = 8 so Range(8) = bucket{1-8} and done, 1 <= X < 8 case recurse the left subtree so instead of universe [1,15] 
-the search is now in universe [1,7] and we have eliminated ~half the buckets so given there are N buckets total, this will be O(Log(N)) if the recursion keeps eliminating ~half the buckets.
+the search is now in universe [1,7] and we have eliminated ~half the buckets so given there are O(N) buckets total, this will be O(Log(N)) if the recursion keeps eliminating ~half the buckets.
 Which is does because the last case is is 8 < X <= 15 so universe has halved to [9, 15] 
 (after incorporating bucket{1-8} into the sum what is left is [9,15]) 
 and Range(X) is computed in the same manner as would Range(X-8) except there is an offset of bucket{1-8} and recurse on the right subtree rooted at the bucket {1-8}.
 So the recursion on the right subtree for Range(X) is mechanistically the same as recursion for Range(X-8) on the left subtree 
 except I have do O(1) extra work that is adding bucket{1-8} to the answer.
 Thus Range(X) in this potential binary bucket tree approach will be O(Log(N)). 
+Quick note: the crucial idea here is a symmetry where bucket {1-8} has a sibling subtree that follows the same strategy as the descendants of bucket {1-8},
+meaning by symmetry, the number of buckets in the [1,7] "left universe" and the same as the number of buckets in the "right universe",
+so at most there are Log(N) steps given that each step halves the number of buckets that can be considered on the bucket chain that computes Range(X).
 
 Let me restate to explain the binary search, halving, logarithmic nature. 
 Range(X) is computed by traversing a chain of buckets and while in the middle of the chain,
@@ -150,7 +154,7 @@ The elements the Range sums for Range(S, E) is E - S + 1 and let me call this nu
 And until Range(X) is completely formed, there is at least 1 more bucket to take. 
 and taking a bucket means adding its value to the sum and recursing right as this bucket is at the root of the right subtree.
 Buckets are designed such that they cover ~half(1 more than half) the indices and their descendant buckets cover the remaining half.
-Then each iteration after adding a bucket to the answer, the "width" contracts by half.
+Then each iteration after adding a bucket to the answer, the remaining "width" contracts by half.
 
 I'm done with 1) but I just want to throw in a preview of the BIT scheme that respects a potential Log(N) scheme that uses Log(N) buckets to partition X.
 We want to use Log(N) buckets. Presumably larger Xs will require more buckets.
@@ -166,18 +170,36 @@ And note that both Range(15) and Range(11) use the same {1-8} bucket and extend 
 And also note that going down the chain of buckets, the size of the buckets at least halves, as does the remining range width, again consistent with a proposed binary, Log(N) scheme.
 
 == Update LogN
-Whew, that finished O(Log(N)) Range. Now consider 2): which buckets we place the index/value I in for another O(Log(N)) operation, Update.
-So every bucket I place I in, I will have to adjust it's value if I were to execute an Update(I) value. (lol "I" as in me or "I" as in the variable name I)
-So at most I can place I in 4 buckets as log(16) = 4 > log(15) so the Update(I) operation will have to touch at most 4 buckets.
+Whew, that finished O(Log(N)) Range. Now consider 2): which buckets I place the index/value X in for the other O(Log(N)) operation, Update.
+So every bucket I place X in, I will have to adjust its value if I were to execute an Update(X) value.
+So at most I can place X in 4 buckets as log(16) = 4 > log(X) so the Update(X) operation will have to touch at most 4 buckets.
 
-Contrast this placing I in Log(N) buckets approach with the naive prefix sum approach in 
-where insteand of Log(N) buckets, I is placed in O(N) buckets: bucket I, bucket I+1, bucket I+2, ..., bucket N.
+Contrast this placing X in Log(N) buckets approach with the naive prefix sum approach in 
+where insteand of Log(N) buckets, X is placed in O(N) buckets: bucket X, bucket X+1,..., bucket N.
 
-Say I falls in 3 buckets, bucket I, bucket I+A, and bucket I+B where bucket K means the Kth bucket when the buckets are ordered. 
-Note that I always falls as the highest contributor to the Ith bucket. That is Bucket I = Bucket{J - I} where J <= I.
-Now when we compute Range(X) for X>=I, we cannot double count I. So whatever chain of (Log(N)) buckets Range(X) uses it must use exactly 1 of these buckets.
-Moreover, from the prefix nature of the buckets (child buckets extending the prefix sum of the chain ending at their parents) none of these 3 buckets can be descendants of each other.
-Because that would mean double counting I. Basically, avoiding double counting mandates some constraints.
+Say X falls in multiple buckets.
+Now when I compute Range(K) for K>=X, I cannot double count X. So whatever chain of (Log(N)) buckets Range(K) uses, it must use exactly 1 of these buckets.
+I also observe the following related constraint: to avoid double counting any indices, whenever an index X is a member of a bucket, it may not be a member of any descendant buckets.
+Buckets only extend prefixes of the parent chain of buckets leading to a given bucket, extension with new indices only, no double counting already covered indices.
+
+Now if I contemplate the aforementioned binary recursive partitioning scheme that I showed as being Log(N) Range, 
+this constraint of having no descendants of a bucket contain any of the indices that bucket contains also enforces Update to be Log(N) as well in a very similar manner.
+Starting from the top of the binary bucket tree at dummy node that is an empty range prefix, there are decisions to make at each node before going down a level,
+and there are Log(N) levels.
+So at each node (and the fact that we reached a given node means X is greater than the prefix covered thus far. Let me say that so far, the amount A has been covered), 
+there is a left subtree of handling K range queries and a right subtree rooted at a bucket{A+1-B} with size K+1 and whose descendants cover an additional K queries.
+
+If X > B, then bucket{A+1-B} and the entire left subtree will be ruled out so over half the candidate buckets are precluded from containing X, 
+because X is too large and must then be in the descendants of bucket{A+1-B}.
+If X = B, then X is by definition in bucket{A-B} and like the previous case, it cannot be in the left subtree because the maximum that can cover is up to Range(B-1).
+And X cannot be in any of the descendants of bucket(A+1-B} to avoid double counting it. So this is infact the terminal case, the last bucket X will be a part of.
+Finally, if X < B it will show up in bucket{A-B} because, following this making-a-decision-at-each-node-and-descending-down-the-tree procedure, X is greater than the prefix so far, 
+meaning X > A so X lies in bucket{A+1-B} again by definition and it may also show up multiple times in the left sub tree.
+However, the key insight again is this double counting constraint and since X lies in bucket{A+1 - B}, this precludes it from being in any of its descendants, 
+so the rest of the right subtree is ruled out, +1 inclusion count of X in bucket{A+1 - B} and then, boom, recuse this downward procedure but on the left subtree 
+again where the size of the left subtree is matches the size of an entire subtree sans its bucket{A+1 - B} root that was ruled out 
+So level by level down we go at least ruling out half the candidate buckets X could lie in each time and at most placing X in a single bucket per step 
+and by virtue of halving, the cap of steps is Log(N).
 
 Just like past Range section where I gave a preview of the Range computation for the actual BIT scheme where I used the extreme, highest, number 15, 
 I'll do the same for the Update operation just like how the BIT scheme does it.
