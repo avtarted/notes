@@ -296,7 +296,7 @@ For example, +8 -> +4 bucket stores [9-12] and the leaves of the subtree of +8 -
 Note that X > 8 or else the +8 bucket that is [1-8] would have already reached X and stop no need to explore further.
 OK so another way is by considering binary as I’ve already talked about in previous subsection. 
 Taking the left branch means you have 0 at a given index the level corresponds to versus going right meaning you have 1 at that same index. 
-Now 0 followed by any K binary digits, at most K 1’s will still be less than the right bucket which is +1 * 2^K or 1 followed by K 0’s (see note on sum of powers of 2 provide link). 
+Now 0 followed by any K binary digits, at most K 1’s will still be less than the right bucket which is 2^K or 1 followed by K 0’s (see note on sum of powers of 2 provide link). 
 So whenever I see 0s on the path to the LSB of X from the root, that is at a branching I go left instead of right, 
 I fill the right 1 child with X. 
 Another way to think about is is classic DFS, where explore node entails 
@@ -349,7 +349,7 @@ and as range(K) traverses down the tree all future buckets in the chain will be 
 Second class is when the 0 is after the LSB 1 in X and again that case but bucket associated with the LSB of X itself, that bucket with X as its highest index, 
 would have X and then same concept everything else in K is a descendant of this bucket so again, see X exactly once.
 
-== Update operation
+== Comparison With Canon BIT
 
 Actual binary index tree connection. 
 Already have described a perfectly serviceable scheme that supports Range and Update! 
@@ -373,6 +373,11 @@ Ex. the +8 -> +4 bucket has index 12 where 12=8+4 and the path to get that bucke
 So now that I have N buckets with N indices compactly representing them
 So it behooves a practical implementor to use a 1 indexed array of size N to compactly order and store the buckets, 
 which is exactly what the BIT schemes mechanism uses: a size N auxiliary array to implicitly encode the BIT.
+I won't cover actual BIT implementation, won't discuss the fancy LSB bit trick but suffice to say, 
+this array makes the tree operations quite cute as the operands, the X in Range(X) and Update(X, V), 
+have a binary representation than can cleverly be extracted and processed to point to various cells in the auxilliary array.
+I don't care too much for the details and flashy bit tricks but more so the understanding, 
+so I personally prefer using my guiding (link/ref) tree picture when reasoning about BIT concepts.
 
 Final sidenote: again main difference from my approach to BIT is removing empty +0 bucket nodes 
 so to be consistent and to not treat the root +0 specially, 
