@@ -56,8 +56,10 @@ So the $8^h$ tree has $8^h$ leaves. When $h=1$, there are $8$ leaves. And when $
 Now for the $2^h$ tree, when $h=3$ there at $8$ leaves. And when $h=6$, there are $64$ leaves.
 So, more generally, this shows that $8^h = 2^(3*h)$. 
 But $8=2^3$, so $8^h = (2^3)^h$, and this proves $(2^3)^h = 2^(3*h)$
-Note that this is only for integer values of $h$.
-I will, very soon, motivate this for rational powers as well.
+More generally, if $X$ is some number as a power of $b$, say, $X = b^h$, 
+then X^k multiplies the height of the $b$-tree representation of $X$ by $k$.
+Note that this is only for integer values of $k$.
+I will, very soon, motivate this for rational powers as well (namely, $k=1/3$).
 
 Finally, and this is, I suspect how most people including myself learned exponents, 
 I can readily see all this when writing out factors: $8^2 = (8)*(8) = (2*2*2)*(2*2*2) = 2^6$.
@@ -77,7 +79,8 @@ That is, I'm assuming the ratio of 1 level 8-Tree : 3 levels 2-Tree,
 $ X "8-level" = X cancel("8-level")* ((3 "2-level") / (1 * cancel("8-level"))) = 3X "2-level" $
 or, equivalently, 
 $ X "2-level" = X cancel("2-level")* ((1 "8-level") / (3 * cancel("2-level"))) = (1/3)X "8-level" $
-And so $8^1/3 = 2$ and more generally, $b^(1/k)=x$ where $x^k=b$.
+And so $8^(1/3) = 2^1 = 2$ and more generally, $b^(1/k)=x$ where $x^k=b$.
 And symbollically, this is readily displayed by $(b^(1/k))^k = b$.
+
 
 
