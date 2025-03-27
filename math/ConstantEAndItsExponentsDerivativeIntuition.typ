@@ -1,6 +1,6 @@
 = Introduction
 
-I will start by 'deriving' the limit formula defining the constant $e$ as $lim_{n -> infinity} (1 + 1/n)^n$ 
+I will start by 'deriving' the limit formula defining the constant $e$ as $lim_(n -> infinity) (1 + 1/n)^n$ 
 with the motivation being finding a base, $b$, such that the function $b^x$ is its own derivative. 
 Then I will attempt to generalize this for positive and negative powers of $e$.
 
@@ -68,11 +68,100 @@ I want to find a different function that satisfies this constraint for a smaller
 Given the function $2^x$ is exponential and I'm working towards finding $e$ where $e^x$, an exponential function, is it's own derivative, 
 this new function for a smaller step size is presumably exponential as well in the form of $f(x) = b^x$.
 
+=== Step Size of $1/3$
+Given a function $f(x) = b^x$, what should $b$ be, such that $(Delta y)/(Delta x) = f(x)$ for $Delta x = 1/3$?
+Clearly, $Delta y = (1/3)*(Delta x)$.
 
+This can also be seen from similar triangles, like these 3 below:
+TODO draw 3 side by side triangles: 1st one base 1, height f(x), 2nd one base 1/3, height (1/3)\*f(x), 3rd one base dx, height dx\*f(x)
 
+So when $x$ increments by $1/3$, the resulting $Delta y$ needs to be $(1/3)*b^x$. Also, $Delta y = b^(x + (1/3)) - b^x$
+So solve for $b$:
+$ b^(x+(1/3)) - b^(x) = (1/3)*b^x $
+$ b^(x)*b^(1/3) - b^(x) = (1/3)*b^x $
+$ b^(1/3) - 1 = (1/3) $
+$ b^(1/3) = 1 + (1/3) $
+$ b = (1 + (1/3))^3 $
+So when $b = (1 + (1/3))^3$, the function $f(x) = b^x$ satisfies the property that $(Delta y)/(Delta x) = f(x)$ for $Delta x = 1/3$.
+This expression for $b$ looks suspiciously like the limit definition for $e$.
+And more generally when $b = (1 + (1/k))^k$, the function $f(x) = b^x$ satisfies the property that $(Delta y)/(Delta x) = f(x)$ for $Delta x = 1/k$.
+So as $k -> infinity$, $b = e = lim_(n -> infinity) (1 + 1/n)^n$.
 
+= My Analysis and Terminology
+Ok, so I rarely like symbolic manipulation without explanation. 
+Let me try and explain what happened, and to do so, 
+I will introduce some concepts and terms.
+And in the next section, I'll use these concepts and terms to derive expressions for exponents of $e$.
 
+== Multiplicative Factor
+The first term I will define is the "multiplicative factor" associated with a particular $Delta x$.
 
+I view slope and difference quotient as means to understand the behaviour of a function locally at some $x$, 
+how $y = f(x)$ responds to some change $Delta x$.
+The numerator of the difference quotient is $Delta y = f(x + Delta x) - f(x)$.
+Start at $(x, f(x))$ and end up at $(x + Delta x, f(x) + Delta y)$.
+Moving $Delta x$ from $x$ induces the addition of $Delta y$ to $y$.
+$f(x + Delta x) = f(x) + Delta y$.
+
+I feel it is very natural when analyzing exponential functions to consider how, for some $Delta x$, 
+$y$ gets multiplied by some fixed multiple, the multiplicative factor, associated with moving this $Delta x$ at all $x$'s.
+For example, take $f(x) = 8^x$. 
+As shown in the appendix, taking a step size of $Delta x = 1$ corresponds to a multiplicative factor of 8.
+And taking a step size of $Delta x = 1/3$ corresponds to a multiplicative factor of 2.
+More generally, the multiplicative factor associated with $Delta x$ for $f(x) = b^x$ is $b^(Delta x)$.
+Because $f(x + Delta x) = b^(x + Delta x) = b^x * b^(Delta x)$
+So moving $Delta x$ from $x$ induces the multiplication of $b^(Delta x)$ to $y$, 
+and what $y$ gets multiplied by is the multiplicative factor associated with that particular $Delta x$.
+$f(x + Delta x) = f(x) * "multiplicativeFactor"$.
+
+== Growth Factor
+The second term I will define is the "growth factor" associated with a particular $Delta x$ 
+as $"growthFactor" = "multiplicativeFactor" - 1$, 
+so $1$ less than the multiplicative factor for that same $Delta x$.
+
+Why subtract 1?
+Recall taking a small step from any $(x,f(x))$ places me at $(x + Delta x, f(x)*"multiplicative Factor")$.
+So substituting growth factor in, this places me at $(x + Delta x, f(x)*(1 + "growthFactor"))$.
+Or $(x + Delta x, f(x) + f(x)*"growthFactor")$.
+
+The idea is that the the multiplicative factor has the action of scaling $f(x)$ 
+so the resulting $y$ coordinate, $f(x + Delta x) = "multplicativeFactor"*f(x)$, is in terms of $f(x)$.
+And $f(x)$, the starting $y$ coordinate before taking the $x$ step of $Delta x$, is clearly in terms itself,
+like $f(x) = 1 * f(x)$.
+So since the starting coordinate is in terms of $f(x)$ and the ending coordinate is in terms of $f(x)$,
+their difference as well naturally can be viewed in terms of $f(x)$ as well.
+
+And that's the role of the growth factor.
+Taking a step $Delta x$ induces a change $Delta y = f(x)*"growthFactor"$.
+This demonstrates a key property of exponents, 
+that the $Delta y$ starting at a $y$ value of $f(x)$ is written in terms of $f(x)$.
+Just like how, for $e$, I want $(Delta y)/(Delta x)$ to be $f(x)$.
+
+Setting the "growthFactor" to be $Delta x$ makes sense as I've already shown.
+$(Delta y)/(Delta x) = (f(x)*cancel(Delta x))/cancel(Delta x)$
+TODO link the 3 side-by-size triangles picture.
+
+In this case of deriving $e$, I set the growth factor to be $Delta x$, 
+but I will soon play around with different growth factors and introduce a new term (growth rate = growth factor / delta x) in the process.
+
+== Putting It All Together
+
+So, approximating the base $e$, the growth factor taking an extremely small step $Delta x$ should be $Delta x$ itself.
+While means the multiplicative factor associated with this extremely small $Delta x$ should be $1 + Delta x$.
+And, again, for any base, the multiplicative factor induced by $Delta x$ on the function $b^x$ is $b^(Delta x)$. 
+So, as $Delta x -> 0$, $"multiplicativeFactor" = 1 + Delta x = e^(Delta x)$.
+
+To go from $e^(Delta x)$ to $e^1$, raise $e^(Delta x)$ by $1/(Delta x)$. 
+$Delta x$ is very small, so $1/(Delta x)$ is very large 
+and represents how many times the multiplicative factor for step size $Delta x$ must be compounded.
+For simplicity, if I want to deal with clean integers, let the small $Delta x = 1/k$ for a large $k$.
+Then $1/k$ cleanly divides $1$, so simply raise the multiplicative factor by $k$ to restore 'e'.
+That is, $e^(1/k) * e^(1/k) = e^(2/k)$, $e^(1/k) * e^(1/k) * e^(1/k) = e^(3/k)$, 
+and so, $k$ factors of $e^(1/k)$ will restore $e^1$. 
+See the Appendix if this seems confusing.
+So I'm done, the multiplicaitive factor when substituting $Delta x$ with $1/k$ 
+is $1 + 1/k$ and it needs to be raised, again, substituting $1/k$ for $Delta x$ to the $k$th power.
+And as $k -> infinity$, this is the limit definition of $e$.
 
 
 
