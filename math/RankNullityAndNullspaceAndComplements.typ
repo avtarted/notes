@@ -21,20 +21,37 @@ All the $x_i$ being $0$ is known as the trivial solution to this equation.
 Note, the above equation can be written in matrix form as $A arrow(x) = arrow(0)$
 where $A = mat(a_1, a_2, ..., a_n)$ and $arrow(x) = vec(x_1, x_2, dots.v, x_n)$.
 Then, if the only solution to this equation is $x = arrow(0)$, ${a_1, a_2, ..., a_n}$ is linearly independent.
+And matrix $A$ has a trivial nullspace only containing the zero vector.
 
 And if a set of vectors is not linearly independent, then it is linearly dependent. 
 This means that there exists a nontrivial solution to $x_1 arrow(a_1) + x_2 arrow(a_2) + ... + x_n arrow(a_n) = arrow(0)$.
-The upshot is of this is that at least one of the $a_i$ can be expressed as a linear combination of the remaining vectors.
+
+An upshot is of this is that at least one of the $a_i$ can be expressed as a linear combination of the remaining vectors.
 To see this for a set of linearly independent vectors, consider the nontrivial solution, $arrow(x) = vec(x_1, x_2, dots.v, x_n)$.
 At least one of the $x_i$ is not $0$ so from $x_1 arrow(a_1) + x_2 arrow(a_2) + ... + x_n arrow(a_n) = arrow(0)$,
 $ x_i arrow(a_i) = sum_(j eq.not i) -x_j arrow(a_j) $
 $ arrow(a_i) = sum_(j eq.not i) -(x_j/x_i) arrow(a_j) $
 
+Another upshot is that the matrix $A$, again formed by concatenating the $a_i$, has a nontrivial nullspace.
+Since $A arrow(x) = arrow(0)$ for a non-trivial $arrow(x)$, the nullspace of $A$ contains that non-zero $arrow(x)$ at the very least.
+Moreover, the nullspace contains all scalar multiples of $arrow(x)$ as well, $op("span")(arrow(x))$ or $k arrow(x)$.
+I can show this by taking the equation, $x_1 arrow(a_1) + x_2 arrow(a_2) + ... + x_n arrow(a_n) = arrow(0)$, 
+and multiplying both sides by $k$ to get $k x_1 arrow(a_1) + k x_2 arrow(a_2) + ... + k x_n arrow(a_n) = arrow(0)$.
+$k arrow(0) = arrow(0)$ and thus $k arrow(x)$ also satisfies the equation $A (k arrow(x)) = arrow(0)$.
+
 
 
 
 == Linear Independence And Uniqueness
-Say I have 2 vectors $arrow(a_1)$ and $arrow(a_2)$ that are lineary independent.
+Say I have 2 vectors $arrow(a_1)$ and $arrow(a_2)$ that are linearly independent.
+Then I will show that $A arrow(x) = arrow(b)$ has exactly one solution.
+If $arrow(b) = arrow(0)$, this is evident by the definition of linear independence,
+as the solution is $arrow(x) = arrow(0)$.
+
+Suppose for contradiction that $A arrow(x) = arrow(b)$ has two solutions, $arrow(u)$ and $arrow(v)$ where $arrow(u) eq.not arrow(v)$,
+then: 
+$ A arrow(u) = A arrow(v) => A arrow(u) - A arrow(v) = arrow(0) => A (arrow(u) - arrow(v)) = 0 $
+But this means 
 
 
 
@@ -42,7 +59,6 @@ Say I have 2 vectors $arrow(a_1)$ and $arrow(a_2)$ that are lineary independent.
 Axler proof
 
 Key idea: Redundancy and NullSpace
-$A arrow(u) = A arrow(v) => A arrow(u) - A arrow(v) = arrow(0) => A (arrow(u) - arrow(v)) = 0$
 Where last implication follows from linearity. 
 So if $arrow(u) != arrow(v)$, I have found a non-trivial vector in the nullspace of $A$, $arrow(u) - arrow(v)$.
 
