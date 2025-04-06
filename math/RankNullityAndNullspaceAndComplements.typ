@@ -8,7 +8,50 @@ as the direct sum of the nullspace of $A$ and any complementary subspace to it i
 Note that for the second goal, one such complementary subspace to the nullspace is the rowspace,
 its orthogonal complement in $RR^n$.
 
+= Poor Man's Method
 
+
+= The Proper Method
+
+
+== Visual Remarks
+You are an explorer in the world $RR^n$
+Let me take the familiar case where I am working with a matrix $A$ with first two columns independent 
+and the third column a linear combination of the first two.
+The domain is thus $RR^3$, which you are exploring.
+You are at some point in this domain.
+If you traverse along the nullspace, so along $n$, that is an infinite line in a particular direction, you get no reward.
+So you pick some direction $arrow(v_1)$ where $arrow(v_1)$ is a unit vector and you take one step in that direction.
+You obtain the reward vector $A arrow(v_1)$.
+You take $k$ steps and obtain the reward vector $k A arrow(v_1)$.
+So this line you walk along maps to a line in the reward space, or the range of $A$.
+
+You note that for some $k A arrow(v_1)$ reward, you can actually reach it in an infinite number of ways:
+take $k$ steps along $arrow(v_1)$ and take any number of steps along $n$.
+(Side remark: a key idea in proof, to me, is that taking steps through along the nullspace is not just a way, but in fact it is the only way to generate duplicate rewards).
+So in fact now you have a plane, $op("span")(arrow(v_1), arrow(n))$, 
+which you can traverse to get all rewards of the form, $k A arrow(v_1)$, or a line in the reward space.
+
+This plane is 2-dimensional and you are in a 3-dimensional domain, 
+and the reward space, or the range, is 2-dimensional but, 
+confined to the exploring the input plane of $op("span")(arrow(v_1), arrow(n))$, 
+you can only reach one dimension in the reward space, $A arrow(v_1)$, 
+but you know there is one more dimension to the reward space you have not explored.
+And you know there exists a direction that is outside the plane that you have not explored
+
+So as an explorer who wants to explore, 
+you repeat the procedure and take some unit vector direction, $arrow(v_2)$, that is outside this plane.
+Before actually steping along this direction you ask yourself if this will let you get some, non-zero, reward 
+that is outside $op("span")(A arrow(v_1))$?
+Note that with this choice of $arrow(v_2)$, the set of vectors ${arrow(n), arrow(v_1), arrow(v_2)}$ form a basis for your input domain, $RR^3$.
+Again, the reward space, or the range, is 2-dimensional and traversing the plane only takes you along one line in the reward space.
+So there must exist some "interesting" direction you can take to get a reward outside of this line, 
+or else the dimension of the range would be $1$ and not $2$.
+Whatever this heretofore unexplored "interesting" direction must be, as ${arrow(n), arrow(v_1), arrow(v_2)}$ form a basis for all the directions you can explore,
+this direction must be able to be represented as a linear combination of that basis or some (uninteresting) steps along the plane 
+and some (interesting) steps along $arrow(v_2)$.
+So $arrow(v_2)$ itself is an "interesting" direction as well, 
+as traversing it must then let you reach a reward outside $op("span")(A arrow(v_1))$!
 
 = Appendix: Linear Independence, Dependence, Redundancy, Nullspace
 Let me start by reviewing the definition(s) of linear independence and dependence.
