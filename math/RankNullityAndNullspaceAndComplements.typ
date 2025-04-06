@@ -80,4 +80,58 @@ But this would imply that the axis $a_i$ is redundant and falls along the span o
 Now I can only visualize things in $2$ or at most $3$ dimensions. 
 So, for a simple and concrete toy example, say I have two vectors in $RR^2$, $arrow(a_1)$ and $arrow(a_2)$, that are linearly independent.
 Let $arrow(a_1) = vec(1, 0)$ and let $arrow(a_2) = vec(1, 1)$.
-I intentionally set $arrow(a_1)$ to be on the x-axis, to show that $arrow(a_2)$ has some y-component "jutting out".
+I intentionally set $arrow(a_1)$ to be on the x-axis, to show that $arrow(a_2)$ has some y-component "jutting out" that is orthogonal to the x-axis.
+As $arrow(a_1)$ and $arrow(a_2)$ are two linearly independent vectors in $RR^2$, together they span all of $RR^2$.
+So consider a general vector, $vec(x, y)$.
+I want to show how it is uniquely specified by some vector $arrow(x) = vec(x_1, x_2)$ 
+as weights for a linear combination of the $a_i$, 
+so where $vec(x, y) = x_1 a_1 + x_2 a_2$.
+
+Due to the choice of $arrow(a_1)$ being on the x-axis, this is quite easy.
+I will need $x_2$ to be $y$ because only $a_2$ has a $y$ component.
+Note that $x_2$ must be exactly $y$ because any more and this overshoots vertically, 
+and there is no way by traversing any distance along $a_1$, the x-axis, horizontally to undo the overshooting.
+Likewise, if $x_2$ is less than $y$, 
+there is no way when strictly confined to movement along the x-axis to make up the deficit along the y-axis.
+Plugging $x_2 = y$ into $vec(x, y) = x_1 a_1 + x_2 a_2$, 
+$ vec(x, y) = x_1 a_1 + y vec(1 1) $
+$ vec(x, y) = x_1 a_1 + vec(y y) $
+$ vec(x - y, 0) = x_1 a_1 $
+$ vec(x - y, 0) = x_1 vec(1, 0) $
+$ vec(x - y, 0) = vec(x_1 , 0) $
+$ x_1 = x - y $
+That is, $x_2 = y$ accounts for the $y$ component, but $x_2$ of $a_2$ also contributes $y$ along the x-axis,
+thus only $x - y$ contribution along the x-axis is needed so $x_1 = x - y$.
+
+And all of this is forced.
+Let me extend this to 3 dimensions.
+Say I have a $arrow(a_1)$, $arrow(a_2)$, and $arrow(a_3)$ that form a linearly independent set 
+where $arrow(a_1)$ and $arrow(a_2)$ lay on, and span, the x-y plane, 
+and so $arrow(a_3)$ has some z-component that juts out.
+This similarly forces $x_3$ to account for the z-component, 
+and now I have reduced the problem to a subproblem but with 2 vectors, $arrow(a_1)$ and $arrow(a_2)$ and 2 weights, $x_1$ and $x_2$.
+
+Back to the $RR^2$ case, where I have some $arrow(a_1)$ and $arrow(a_2)$ that span all of $RR^2$, but I want to be general.
+Sure I could rotate the system and treat $arrow(a_1)$ as the x-axis.
+But let me not and instead try to invoke classic "head to tail" vector addition.
+Say I have the vector $x_1 arrow(a_1) + x_2 arrow(a_2)$ that is a linear combination of the basis with weights $vec(x_1, x_2)$.
+I want to show that there cannot be a different vector, $vec(x_1^', x_2^')$ 
+such that $x_1 arrow(a_1) + x_2 arrow(a_2) = x_1^' arrow(a_1) + x_2^' arrow(a_2)$.
+As $vec(x_1, x_2) eq.not vec(x_1^', x_2^')$, at least one of the pairwise entries must be different.
+Without loss of generality, say $x_1 eq.not x_1^'$.
+And again, without loss of generality let $x_1 > x_1^'$ 
+(if $x_1 < x_1^'$, swap the roles of $vec(x_1, x_2)$ and $vec(x_1^', x_2^')$).
+Now $x_1 arrow(a_1) + x_2 arrow(a_2)$ can be viewed as 
+$x_1$ units along the axis $a_1$ and then $x_2$ units along the $a_2$ axis.
+That is using $vec(x_1, x_2)$ as weights.
+But now consider $vec(x_1^', x_2^')$ as weights, where $x_1^' < x_1$ and $x_2^'$ is unknown.
+First, move $x_1^'$ along the $a_1$ axis.
+Observe that there is a deficit of $x_1 - x_1^'$ units along the $a_1$ axis.
+The question is, what should $x_2^'$ be?
+If I set to be $x_2$, the deficit remains unaccounted for.
+No matter what, movement along the $a_2$ axis cannot account for the $x_1 - x_1^'$ unit deficit along the $a_1$ axis, 
+because of the linear independence: $a_1$ is not on the $a_2$ axis.
+Purely algebraically, rearrange $x_1 arrow(a_1) + x_2 arrow(a_2) = x_1^' arrow(a_1) + x_2^' arrow(a_2)$ 
+to $(x_2^' - x_2) arrow(a_2) = (x_1 - x_1^') arrow(a_1)$
+And by linear independence, I'm done, 
+since no matter what $x_2^'$ is, movement along the $a_2$ axis cannot restore the deficit along the $a_1$ axis.
