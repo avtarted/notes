@@ -9,6 +9,44 @@ Note that for the second goal, one such complementary subspace to the nullspace 
 its orthogonal complement in $RR^n$.
 
 = Poor Man's Method
+When I ponder about the Rank Nullity Theorem, 
+I often end up arriving at this constructive approach I've dubbed the Poor Man's Method.
+In the next paragraph, I'll provide a high-level overview into this construction, 
+and then I will explore an example to illustrate this idea more concretely.
+
+Say the matrix $A$ I am working with has a rank of $k$, that is, $k = op("Dim")(op("Range")(A))$.
+Then $k$ column vectors of $A$ form a basis for the range of $A$,
+and the remaining $n - k$ column vectors are redundant.
+Let me say that the first $k$ columns of $A$ are linearly independent and span the entire range of $A$.
+My Poor Man's idea, then, is to manually create a basis for $RR^n$ with two classes of basis vectors
+that correspond to the two classes of column vectors of $A$, the first $k$ columns and the rest.
+The first class are $k$ standard-basis-like vectors that correspond to the first $k$ columns.
+Particularly, where the $i$th such vector corresponds to the $i$th column vector 
+in that the $i$th basis vector of $RR^n$ contains a $1$ at the $i$th entry and zeroes everywhere else.
+Somewhat similarly, the second class are $n-k$ vectors that correspond to the last $n-k$ redundant columns.
+Like the first class, a vector of this class has a $1$ corresponding to a given redundant column.
+But rather than all other entries being zero, 
+the top $k$ entries will have some non-zero entry(ies) that capture the redundancy of the corresponding column vector: 
+so the column vector is redundant in that it can be expressed as a linear combination of the first $k$ columns with some weights 
+and thus the top $k$ entries would be those same weights (but negative).
+These $n-k$ second class basis vectors are in linearly independent and are all in the nullspace of $A$ by design, 
+and the $k$ first class basis vectors are not in the nullspace of $A$ 
+(that would violate the presumtion of the first $k$ columns of $A$ forming a linearly independent set-
+read the Appendix if this is unclear).
+Together these two classes of basis vectors are $n$ in number and form a linearly independent set, 
+confirming their designation as a basis of $RR^n$, 
+so it must be that the $n-k$ second class basis vectors form a basis for the nullspace of $A$ 
+and thus the Rank Nullity Dimensions add up: $n = k + (n-k)$.
+
+Let me start with two vectors, $arrow(a_1)$ and $arrow(a_2)$ in $RR^3$ 
+that are non-zero vectors and are not scalar multiples of each other.
+Then I can concatenate them to form the $3$ by $2$ matrix $A = mat(a_1, a_2)$.
+The range of $A$ has a dimension of $2$ and visually, 
+it is the plane that is $op("span")(arrow(a_1), arrow(a_2))$.
+And the nullspace of $A$ is empty except for the trivial zero vector, 
+so the dimension of the nullspace is $0$
+(See the Appendix if you are not comfortable with this).
+So Rank Nullity holds as $n = 2 = op("Dim")(op("Range")(A))$.
 
 
 = The Proper Method
