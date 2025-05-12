@@ -72,3 +72,45 @@ And in this relation, the derivative nature of the variables are swapped.
 Small x delta induces large y delta in original fn.
 But in the inverse, small y associated with large x change as x = y^n shows.
 Already notions of their derivaties being recriprocals of each other are suggestive to me.
+
+== Bonus Bonus: Derivatives of inverses of functions whose derivatives 'resemble' said functions
+Two examples, $f(x) = e^x$ and $f(theta) = sin(theta)$.
+
+Let me start with the more involved example first, $f(theta) = sin(theta)$.
+Then $f'(theta) = cos(theta)$.
+And I view $cos$ and $sin$ as complements, 
+two different legs of the same right triangle,
+united by the pythagorean relation: $(sin(theta))^2 + (cos(theta))^2 = 1$.
+So I have: $cos(theta) = sqrt(1 - (sin(theta))^2)$,
+so the derivative of $sin(theta)$, $cos(theta)$, can be simply expressed as a function of $sin(theta)$.
+
+So what about $f^(-1')(x)$?
+First step back and view the action of $f^(-1)$ as $f^(-1)(x) = theta | sin(theta) = x$.
+So $f$ contains the coordinate pair $(theta, x)$ while $f^(-1)$ contains the coordinate pair $(x, theta)$.
+$(diff f)/(diff theta) = cos(theta)$.
+So $(diff f^(-1))/(diff x) = 1/cos(theta)$.
+But as $cos(theta)$ resembles $f(theta) = sin(theta)$ by the Pythagorean relation
+$(diff f^(-1))/(diff x) = 1/sqrt(1 - (sin(theta))^2) = 1/sqrt(1 - x^2)$.
+The last step, substituting $x$ for $sin(theta)$, defines my idea.
+
+(The way I learned this in high school was drawing a right triangle with hypoteneous 1 which is equivalent)
+(1/cos(arcsin(x)) and use a triangle to compute the denominator
+arcsin(x) takes you from a ratio scalar, x, to an angle, but the derivitive of sin(theta) is cos(theta),
+which takes in an angle, and sends it back to a ratio scalar.
+So it's like you start in the "ratio-scalar/X" world, go to "angle/theta" world via the inverse
+but then the derivative sends you back from "theta" to "X" world (cos and sin are both ratio-scalars).
+It all hinges on the derivative having this world mapping direction action.
+TODO make last idea more clear, literally just pasting my mental dialogue here lol)
+
+
+Outcome versus Expectation
+I would expect derivative of arcsin to involve some trig function(s).
+And I don't have any clue, no guesses, about the derivative of ln, but 1/x seems quite surprising and well, arbitrary to me.
+If you consider for $f(x) = y = e^x$, $f'(x) = e^x = y$ so $f^(-1')(y) = 1/y$ 
+(idea is to use 'y' as the canocial output variable of $f$ but input variable of $f^(-1))$.
+Well if you squint for the trig one, you see the pythagorean relation.
+But it's clean and involves no trig.
+And the "cleanliness" of both stems from the same resemblance of the $f$ and $f'$
+And this resemblance shows up in $f^(-1')$ as well, which I find neat, maybe obvious, but still neat.
+
+
