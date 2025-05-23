@@ -163,7 +163,83 @@ So I'm done, the multiplicaitive factor when substituting $Delta x$ with $1/k$
 is $1 + 1/k$ and it needs to be raised, again, substituting $1/k$ for $Delta x$ to the $k$th power.
 And as $k -> infinity$, this is the limit definition of $e$.
 
+== Exponents of $e$
+My motivation for this article was to understand the derivation of the exponential distribution as per my CS70 (Discrete Math Probability Theory) notes.
+In particular, the introduction of the lambda variable felt slightly arbitrary to me. 
+And I also felt rusty in my understanding of the number $e$ and exponentiation itself.
+So I compiled my thoughts in this article.
 
+=== Positive integer powers of $e$
+Ok, so for $e$, the associated growth factor was $Delta x$, the step size itself. Note that this is a clean multiple of $Delta x$.
+But what if I tweak the growth factor and double it to $2 Delta x$?
+Or set the growth rate, sometimes referred to as lambda, to $2$?
+Then the new multiplicative factor becomes $1 + 2 Delta x$.
+So a small step of $Delta x$ now induces $Delta y = y 2 Delta x$.
+Whereas when lambda was $1$ (the case for $e$), the associated $Delta y = y Delta x$.
+So with a lambda of $2$, doubling lambda, the change in the output, $Delta (f(x)) = Delta y = 2 y Delta x$ doubles as well.
+So, given small deltas scale linearly (local linearity approximations), 
+a half-step of $(Delta x)/2$ would induce the same $Delta y$ that a full step would for $e$.
+So $k/2$ lambda = $2$ steps would result in the same effect as taking $k$ lambda = $1$ steps.
+And as I showed, $k$ lambda = $1$ steps induces a multiplicative factor of $e$.
+So $k/2$ lambda = $2$ steps induces a multiplicative factor of $e$ so $k$ steps would induce a multiplicative factor of $e^2$.
+So, $k$ steps with the step size halved :$1/k$ to $1/(2k)$ (again, always allowed to do this as $k -> infinity$ anyways) with lambda 2 results in $e^2$.
+Thus $lim_(n -> infinity) (1 + 2/n)^n = e^2$ and more generally for positive integer powers lambda ($lambda$), $lim_(n -> infinity) (1 + lambda/n)^n = e^lambda$
+And all of this is the chain rule at play. 
+
+Now to show this exact idea symbolically:
+$ lim_(n -> infinity) (1 + 2/n)^n $
+$ approx (1 + 2/k)^k $ (for large $k$)
+$ approx (1 + 2/(2k))^(2k) $ (replace $k$ with $2k$, $k -> infinity => 2 k -> infinity$)
+$ = (1 + 1/k)^(2k) $
+$ = ((1 + 1/k)^(k))^2 $
+$ approx e^2 $ (approximate definition of $e$ when $k$ gets large)
+
+== Negative integer powers of $e$
+TODO this section, feel tired and feel this warrants a bit more consideration and thought on my part, like not immediately obvious to me..
+Want to show what did for last section except for lambda = -1.
+
+== Bonus: Logarithmic Differentiation to Prove Power Rule
+I want to compute the derivative of $x^n$.
+The idea, to me, behind logarithmic differentiation is to view any base as a power of $e$.
+That is, $x = e^k | k = ln(x)$.
+Now, given the base is $e$ and as per the entire note thus far, 
+a very small $Delta k$ induces a multiplicative factor of $e^(Delta k) = 1 + Delta k$ and a change in $x$, $Delta x = x Delta k$.
+Again because $Delta x = Delta (e^k) = e^(k + Delta k) - e^k = e^k e^(Delta k) - e^k = e^k (e^(Delta k) - 1) = e^k (1 + Delta k - 1) = e^k Delta k$.
+This is consistent with the derivative, $(dif x)/(dif k) = x | x = e^k$, as $Delta k$ applied to $x = e^k$ scales that $Delta k$ by $x$ itself.
+So I have the relation of $Delta x$ as $Delta k$ scaled by $x$ itself, 
+and again, this applies for any $x = e^k$ (even (e^n)^k which I will make use of soon), 
+as regardless of $x$, the multiplicative factor induced by the $Delta k$ is the same, $1 + Delta k$.
+Note that this goes the other direction as well, $Delta k = (Delta x)/x$ (thus the derivative of $ln(x)$ is $1/x$).
+In fact, for the purposes of the derivative of powers of $x$, I eventually want to say that the $Delta x$ induces the $Delta k$.
+but point is these deltas are related by the scaling factor of $x$, the starting value itself.
+
+Ok, great. I have some connection between $x$ and $k$ and $Delta x$ and $Delta k$.
+But what about $x^n$? How can I apply deltas to that? 
+$x^n = (e^k)^n = e^(n k)$. 
+So the $Delta x$ induces a $Delta k$ resulting in $e^(n k)$ becoming $e^(n(k + Delta k)) = e^(n k + n Delta k) = e^(n k) e^(n Delta k) = e^(n k) (e^(Delta k))^n$.
+So the $Delta k$ induces a multiplicative factor of $(e^(Delta k))^n$.
+Recall $e^(Delta k)$ is simply the same multiplicative factor $1 + Delta k$.
+I don't think the exact multiplicative factor's value is important 
+insomuch as the fact that the new multiplicative factor is the one I showed earlier, raised to the $n$, so $n$ applications of it. 
+The change in exponent of $x^n = (e^(k))^n$ is $n Delta k$, where $Delta k$ was the change in exponent of $x$ induced by $Delta x$.
+Chain rule vibes where the exponent, rather than simply being incremented by $Delta k$ is now being incremented by that $n Delta k$, a scalar multiple of $n$, 
+so linearity as I know how $x = e^k$ reponds to $Delta k$ (increments by $Delta x$ such that $Delta x = x Delta k$)
+and note that $e^(n k)$, being an exponent of $e$, would respond to that same, lone, $Delta k$ added to its exponent the same way, 
+the same multiplicative factor of $e^k = 1 + Delta k$, so 
+$Delta (x^n) = Delta (e^(n k)) = e^(n k + Delta k) - e^(n k) = e^(n k) e^(Delta k) - e^(n k) = e^(n k) (1 + Delta k) - e^(n k) = e^(n k) Delta k = x^n Delta k$ 
+(again, in computing $Delta (x^n)$, $Delta k$ is scaled by the value of $x^n$, the value whose delta I am trying to compute).
+Now that was just for a single $Delta k$, but there are $n$ of them.
+And each $Delta k$ induces a multiplicative factor whose multiplication to $x^n$ induces a $Delta x$ of $x^n Delta k$.
+And by local linearity of $Delta x$ responding to a very small $Delta k$, $n Delta k$ will thus result in the true $Delta (x^n) = x^n n Delta k$.
+This is the chain rule at play.
+Another way I see this, is again small deltas idea: as $Delta k -> 0$, $n Delta k -> 0$, 
+and for any very small change in exponent, be it $Delta k$ or $n Delta k$, the change to $e^(n k)$ induced by said very small change in exponent 
+is that change itself multiplied by $e^(n k)$ itself.
+Again, this reults in the true $Delta (x^n) = x^n n Delta k$ for a change in exponent of $n Delta k$.
+This is a bit counter intuitive to me, $n$ applications of a multiplicative factor behaving linearly, but that's the idea of local linearity is my rationale. 
+Almost done, I have $Delta (x^n) = n x^n Delta k$, but to get the derivative with respect to $x$ which is the entire problem, 
+I need to write $Delta k$ in terms of $Delta x$, and I've already established their relation, $Delta k = (Delta x) / x$, 
+so $Delta (x^n) = n x^n (Delta x)/x = n x^(n-1) Delta x => Delta(x^n)/(Delta x) = n x^(n-1)$. Done.
 
 = Appendix: Exponentiation Basics
 I'll explore basics of exponentiation here using integers and motivate some properties of exponents, especially the property: $(b^(k))^x = b^(k*x)$.
