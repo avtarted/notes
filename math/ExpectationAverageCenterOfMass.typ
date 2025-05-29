@@ -110,6 +110,39 @@ Elements greater than the average contribute positive $d_i$s and elements less w
 This results in a nice visual representation of the average as a central point where all the distance offsets summed up cancel each other out.
 TODO draw numberline, plot some a_i and M, draw "distance lines" from M to all a_i and color these lines in 2 different colors for those to the right and left of M, say green right and red left (colors selected from a profit loss view) and then write as caption or somethere below sum(len(red)) = sum(len(green))
 
+=== Alternate Symmetry About Center View Via Comparison Against Uniformity
+First I'll start with a simple motivating example and then attempt to generalize it.
+The example is I'm in a group project and our group has $3$ people and $4$ units of work to do.
+I end up being the person who "carries" everyone: I do $2$ units of work and the other $2$ members do $1$ unit each.
+This checks out because $2 + 1 + 1 = 4$.
+But in a "fair" system, where everyone puts in the same, uniform, amount of work, 
+all $3$ of us would put in $4/3$ amount of work. $4/3 + 4/3 + 4/3 = 3*(4/3) = 4$, checks out.
+But note that $4/3$ is precisely what the average of $[2, 1, 1]$ is.
+I did $2$ units of work so $2 - 4/3 = 2/3$ extra work 
+meaning the other $2$ members in total had to do $2/3$ less work between both of them.
+So each could do $1/3$ less and indeed, they both do $1$ unit of work each which is $1/3$ less than $4/3$.
+
+
+I want to extract a priciple of conservation
+I have a list of numbers, $L$, with $N$ elements, and where all the elements sum to $sum(L)$, and therefore $L$'s average is $M = sum(L)/N$
+I want to think in terms of paritions, as I'm partitioning $sum(L)$ into $N$ paritions using $N-1$ dividers.
+For the simplest case, I add $1$ divider right after some index $K$ (say $1$-indexed) to partition $L$ into $2$ partitions or sublists $A$ and $B$
+where $A$ has the first $K$ elements and so it's length is $K$, and $B$ has the remaining elements so its length is $N-K$.
+And by conservation of the total sum of elements regarless of partitioning strategy, $sum(A) + sum(B) = sum(L)$.
+Now if all the elements were the same, that is, they all were the average $M = sum(L)/N$ then 
+$sum(A) = M*K$ and $sum(B) = M*(N-K)$.
+But say, on average(!), that $A$ is greater average than $M$, that is $sum(A) > M*K$ or $sum(A) = M*K + ?$ for some unknown positive $?$.
+Then intuitively, $B$ would on average, be less than $M$.
+$ sum(A) + sum(B) = sum(L) = N*M $
+$ M*K + ? + sum(B) = M*N $
+$ sum(B) = M*N - M*K - ? = M*(N-K) - ? $
+So in aggregate, $A$ is $?$ over the case where it would be were all the numbers uniform at the average $M$, 
+and $B$ is exactly that same $?$ in aggregate under the case where it would have been.
+
+Actually, wait, so could view $L$ into $3$ partitions, first sort $L$ then view it as those strictly less than $M$, those equal to $M$, those strictly greater than $M$.
+Then by this same token, in total the first group is $?$ over the uniform case, and so the last group must be $?$ under the uniform case.
+The $?$'s cancel out which is the entire point of this.
+
 == Average and Expectation: Weighted Coin Flip
 I'll recyle the (A,B) and (A,A,B) cases to motivate intuition about the term expectation. I'll continue to keep A = 1 and B = 2.
 Flip heads get A, flip tails, get B both equally likely in the (A,B) case
