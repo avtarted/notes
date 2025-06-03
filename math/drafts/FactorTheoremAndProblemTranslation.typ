@@ -8,7 +8,7 @@ And then I will make some connection(s) and get to invoke the idea of problem tr
 
 
 Bonus: Best fit polynomial Taylor Series 
-Given some function $f(x)$, I want to find find a quadratic approximation near the point $x = x_0$.
+Given some function $f(x)$, I want to find find a quadratic approximation, $p(x)$, near the point $x = x_0$.
 That is, I want to say $f(x) approx p(x)| x approx x_0$ where $p(x) = a x^2 + b x + c$.
 So $f(x) approx a x^2 + b x + c| x approx x_0$ and I want to find values for $a$, $b$, $c$ for this to be true.
 And the quadratic approximation, the best fit parabola at the point $x = x_0$ satisfies the three relations:
@@ -33,3 +33,16 @@ So I can replace occurences of $x$ with $x - x_0$ for the approximation of $g(x)
 To summarize, $f(k)|k approx x_0 = g(k - x_0)|k approx x_0 = (f''(x_0))/2 (x-x_0)^2 + f'(x_0) (x-x_0) + f(x_0)$.
 The last equality follows from as input, $k$, approaches $x_0$, $g$'s input approaches $0$,
 so I can use the quadratic approximation of $g$ near $0$ that I just derived.
+
+Also, same underlying mechanism.
+I state this underlying machinery explicitly as $f + (Delta f) approx f(x_0) + f'(x_0) (Delta x) + (f''(x_0))/2 (Delta x)^2 | x approx x_0 $.
+And at $x_0 = 0$, $Delta x = x - x_0 = x$. And this change in $x$ equaling $x$ itself is a nice property.
+
+Let me briefly explain how I reason about this mechanism, inspired by simple kinematics.
+I personally find thinking in terms of velocity and acceleration helpful for $f'$ and $f''$ respectively.
+$f'(x_0) (Delta x)$ is the contribution toward $Delta f$ solely from $f'(x_0)$ initial velocity, if this velocity is held constant so no acceleration. 
+(This is a linear approximation as velocity is constant, no curvature).
+and $(f''(x_0))/2 (Delta x)^2$ is the contribution toward $Delta f$ solely from $f''(x_0)$, the initial acceleration and likewise, no initial velocity.
+Then the velocity would linearly increase so the average velocity over $Delta x$ (think of $x$ as $t$ for time) would be $(f''(x_0) (Delta x))/2$ 
+and thus the resulting $Delta f$ would be that average velocity times $Delta x$.
+Alternatively, think of the velocity time graph being a triangle with base $Delta x$ and height $(Delta x) f''(x_0)$.
