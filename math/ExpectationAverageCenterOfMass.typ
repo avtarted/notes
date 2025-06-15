@@ -122,7 +122,6 @@ I did $2$ units of work so $2 - 4/3 = 2/3$ extra work
 meaning the other $2$ members in total had to do $2/3$ less work between both of them.
 So each could do $1/3$ less and indeed, they both do $1$ unit of work each which is $1/3$ less than $4/3$.
 
-
 I want to extract a priciple of conservation
 I have a list of numbers, $L$, with $N$ elements, and where all the elements sum to $sum(L)$, and therefore $L$'s average is $M = sum(L)/N$
 I want to think in terms of paritions, as I'm partitioning $sum(L)$ into $N$ paritions using $N-1$ dividers.
@@ -142,6 +141,29 @@ and $B$ is exactly that same $?$ in aggregate under the case where it would have
 Actually, wait, so could view $L$ into $3$ partitions, first sort $L$ then view it as those strictly less than $M$, those equal to $M$, those strictly greater than $M$.
 Then by this same token, in total the first group is $?$ over the uniform case, and so the last group must be $?$ under the uniform case.
 The $?$'s cancel out which is the entire point of this.
+
+=== Deviations About a Moving Center From "Guess" to Zero at Average 
+So I have shown how the average serves as a center where the sum of deviations from it equals zero.
+Now naturally, I thought, what if the center was pinned not at the average, $M$, but instead $M - 1$.
+What would the sum of deviations be then?
+Well, those numbers in the list greater than $M$ would have their positive deviations increase by $1$.
+And those numbers in the list less then $M$ would have their negative deviations decrease in magnitude by $1$, 
+meaning that the deviation itself actually also increases by $1$.
+So in total, as all $N$ deviations increase by $1$, pinning the center $1$ to the left results in an increase to sum deviation by $N$.
+And vice versa, pinning the center $1$ to the right would decrease sum deviation by $N$.
+
+Guess of initial center being pinned at $0$, and let the list, $L$, be of $N$ positive integers.
+This guess is nice because the sum deviation of the list is infact $sum(L)$.
+Again, shifting from center from $0$ to $1$ results in a decrease of sum deviation by $N$.
+(It's like thinking "relatively": 
+pin this center at $0$ and increasing that by $1$, is like decreasing all the numbers to the right by $1$, the entire system/constellation by $1$.)
+But I want sum deviation to reduce from $sum(L)$ to $0$ to find the center that I desire. 
+If I move $Delta$ to the right, so from $0$ to $Delta$, the sum deviation would decrease by $N Delta$.
+Solve $sum(L) = N Delta$ for $Delta$, and I get $Delta = sum(L)/N$, which is where I want to pin my center to get zero sum deviation.
+But this is precisely the definition of average!
+
+Each of the $Delta$ change is amplified by $N$ where each of the $N$ points contributes the equivalent, uniform, $Delta$ reduction in sum deviation. 
+So there's this symmetry where each of the $N$ points is explaining an equivalent share of the $sum(L)$ change, which is what diving by $N$ entails.
 
 == Average and Expectation: Weighted Coin Flip
 I'll recyle the (A,B) and (A,A,B) cases to motivate intuition about the term expectation. I'll continue to keep A = 1 and B = 2.
