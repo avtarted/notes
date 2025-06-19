@@ -279,3 +279,56 @@ And again, summing them over all N we get the expected surplus profit from $M$.
 And naturally, we could then do the same thing to get the expected loss from $M$, and so $M$ is set such that these expectations are equal.
 
 It's all central and balanced, which is neat.
+
+== Bonus: Secant Line's Slope as the Average Rate of Change
+When first taking calculus, when motivating the concept of a derivative, 
+you always start out with the slope of a secant line.
+And this slope is referred to as the average rate of change.
+I want to provide an explanation of how and why the word "average" applies
+as this article is about averages.
+
+Say someone ran some distance $Delta d$ over some time $Delta t$.
+Let me specify $Delta d = 15$ units of distance and leave $Delta t$ fixed but unspecified.
+They started off strong but gradually lost steam and kept slowing down with time, but they never fully stopped.
+And they traveled exactly in a straight line only going forward.
+TODO draw a distance vs time graph concave down with exact numbers mirroring the example below (+5, +4, +3, +2, +1)
+Now say the total distance vs time graph is continuous, but I want to piecewise discretize into $n$ time intervals 
+where for a given time interval, let me assume that the runner is running at a uniform speed.
+To me, as $n$ gets larger and larger, my analysis will get finer and finer grained and this uniformity-in-interval feels more and more reasonable.
+
+Ok, let me begin. Let $n=5$. This means I partition $Delta t$ into $5$ intervals, each spanning $(Delta t)/5$ units of time.
+Say over the course of the first interval the runner starts strong and traverses $+5$ units of distance.
+Then over the course of the second interval, the runner traverses $+4$ units of distance.
+Then over the course of the third interval, the runner traverses $+3$ units of distance.
+Then over the course of the fourth interval, the runner traverses $+2$ units of distance.
+Then over the course of the fifth interval, the runner traverses $+1$ units of distance.
+TODO draw this discretized/linearized graph for this n=5 coarse granularity.
+Note that these numbers agree with $Delta d = 15 = 5 + 4 + 3 + 2 + 1$.
+Let me symbolically denote each unit of distance traversed in the $i$th interval as $Delta d_i$.
+Then $Delta d = sum_(i=1)^(n) Delta d_i$.
+Summing the $Delta d_i$ is great, and the next step is averaging them, that is, dividing this sum by $n=5$.
+So $avg(Delta d_i) = (Delta d)/n = 15/5 = 3$.
+
+Now Let me "compare against uniformity" like I did in a previous section.
+Now I can express $Delta d$ in two ways, 
+the way the runner actually ran, or the way a uniform runner with uniform speed traversing the same distance over the same time might have ran:
+$Delta d = 15 = 5 + 4 + 3 + 2 + 1 = 3 + 3 + 3 + 3 + 3$.
+On average, the runner ran $+3$ units of distance per given interval and this results in a nice, linear graph.
+TODO draw a new distance vs time graph same format as previous graph, but using this uniform data, basically formaing a straight line.
+
+So I have shown how the average distance per discrete time interval is $+3$, and how the graph is a straight line.
+Now it is time to wrap this up by connecting distance to speed.
+The speed of the runner over any given interval $i$ is $(Delta d_i)/((Delta t)/n)$, which is the slope of the line in the $i$th interval in the distance vs time graph, 
+computed by dividing the distance traversed in the interval, $Delta d_i$, by the duration of the interval, $(Delta t)/n$.
+For the uniform runner case, the speed is the slope of the straight line, which is constant across the entire graph.
+Per interval, the slope is $3/((Delta t)/5)$ and over the course of the entire graph, the slope is $15/(Delta t)$ which is the exact same slope.
+Again this is consistent with uniform speed: $15$ distance over $Delta t$ time and $15/5 = 3$ distance over any $(Delta t)/5$ time interval, 
+both numbers getting chopped by $1/5$th 
+(I believe this is a crucial concept: the slope of the secant line is equal to the slope in the uniform case of any given interval 
+(As the slope in that case is the numerator and denominator both scaled down by a factor of $1/n$)).
+Whereas for the actual (well $n=5$ discretized granularity), non-uniform, case the speeds from first to last intervals respectively are:
+$5/((Delta t)/5), 4/((Delta t)/5), 3/((Delta t)/5), 2/((Delta t)/5), 1/((Delta t)/5)$. 
+So clearly the average speed is $3/((Delta t)/5)$.
+But that's the same numerator "$3$" that is the average interval distance traversed (only scaled by, divided by, the uniform interval time of $1/((Delta t)/5)$), 
+and so this average speed is equal to the average interval speed in the uniform speed case which I showed was $(Delta d)/(Delta t)$!
+And done, I've illustrated how the slope of the secant line is equivalent to the average speed, for $n=5$ intervals discretization/linearization at least.
