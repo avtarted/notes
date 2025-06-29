@@ -143,6 +143,9 @@ TODO link the 3 side-by-size triangles picture.
 
 In this case of deriving $e$, I set the growth factor to be $Delta x$, 
 but I will soon play around with different growth factors and introduce a new term (growth rate = growth factor / delta x) in the process.
+And for $e$ with a growth factor of $(1) * Delta x$, the growth rate is simply $1$.
+As a preview, growth rate is finally an actual, well established term in math that's not something I made up: 
+typically in math and science, growth rate is referred to with upper or lower case $r$ or $lambda$.
 
 == Putting It All Together
 
@@ -162,6 +165,29 @@ See the Appendix if this seems confusing.
 So I'm done, the multiplicaitive factor when substituting $Delta x$ with $1/k$ 
 is $1 + 1/k$ and it needs to be raised, again, substituting $1/k$ for $Delta x$ to the $k$th power.
 And as $k -> infinity$, this is the limit definition of $e$.
+
+== Connection with "Continuous Compounding"
+This section is a quick detour, but consistent with all material so far.
+Viewing the growth factor in terms of $Delta X$ made sense from an algebraic perspective, 
+so as to cancel out this $Delta X$ with the $Delta X$ denominator when computing the difference quotient derivative approximation.
+But I want to briefly also explain, justify even, this by linking it to the "continuous compounding" interpretation and expression for $e$, 
+which as how I and probably most others were first introduced to this mysterious constant.
+
+Start by approximating continuous compounding as compounding once every $Delta t$ units of time.
+($t$ and $x$ are different variable names for the same input, independent variable).
+So this $Delta t$ is extremely tiny.
+Say I have amount $a$ at $t=0$.
+And after a single compounding event, so now at $t = Delta t$, the increase I get, this growth factor, is $a r (Delta t)$.
+$r$ is the growth rate. And as $Delta t$ is tiny, so is this resulting product. 
+Of course, the question is, why multiply by $Delta t$?
+This comes from approximating continous compounding.
+The key is the relation of the number $1$ and $Delta t$, namely $k = 1/(Delta t)$
+(Mentally, to me, this is the same as period $Delta t$ and frequency $k$ (but replace $2 pi$ default trig period length with $1$ time unit length)).
+Continous compouding means per $1$ unit of time, there are $k$ compounding events.
+As $Delta t$ is miniscule, $k$ is insanely large, and with the remainder being upper bounded by $Delta t$, I view $k$ as an integer.
+And I view multiplying by $Delta t$ as a scaling operation, namely, scaling down by a factor of $k = 1/(Delta t)$.
+But that's precisely how continuous compounding works, rather than applying the interest rate or growth factor $r$ once at $t=1$ after a unit of time,
+apply $r/k$, a $k$-scaled down rate interest, but instead compensate by compounding it $k$ times.
 
 == Exponents of $e$
 My motivation for this article was to understand the derivation of the exponential distribution as per my CS70 (Discrete Math Probability Theory) notes.
